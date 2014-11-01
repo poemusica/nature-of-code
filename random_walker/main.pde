@@ -1,13 +1,18 @@
 // GLOBALS
-Walker w;
+RandomWalker w;
+SWWalker sww;
 
 void setup(){
   size(640, 360);
-  w = new Walker();
+  w = new RandomWalker();
+  sww = new SWWalker();
   background(255);
 }
 
 void draw(){
   w.step();
   w.display();
+  
+  sww.step();
+  sww.display();
 }

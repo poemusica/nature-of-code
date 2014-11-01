@@ -1,8 +1,8 @@
-class Walker {
+class RandomWalker {
   float x;
   float y;
   
-  Walker(){
+  RandomWalker(){
     x = width/2;
     y = height/2;
   }
