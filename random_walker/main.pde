@@ -7,8 +7,6 @@ void setup(){
   background(255);
 }
 
-
-
 void draw(){
   w.step();
   w.display();

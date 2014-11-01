@@ -13,11 +13,10 @@ class Walker {
   }
   
   void step(){
-    int choice = int(random(4));
+    int stepx = int(random(3)) - 1; // yields -1, 0, or 1
+    int stepy = int(random(3)) - 1;
     
-    if (choice == 0){ x++; }
-    else if (choice == 1) {x--;}
-    else if (choice == 2) {y++;}
-    else if (choice == 3) {y--;}
+    x += stepx;
+    y += stepy;
   }
 }
