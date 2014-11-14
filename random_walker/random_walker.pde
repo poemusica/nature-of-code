@@ -8,7 +8,7 @@ class RandomWalker {
   }
   
   void display(){
-    stroke(0);
+    stroke(0, 0, 255);
     point(x, y);
   }
   

@@ -8,7 +8,7 @@ class MouseWalker {
   }
   
   void display() {
-    stroke(0);
+    stroke(255, 0, 0);
     point(x, y);
   }
   

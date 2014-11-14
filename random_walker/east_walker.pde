@@ -8,7 +8,7 @@ class EastWalker{
   }
   
   void display(){
-    stroke(23, 244, 35);
+    stroke(0, 255, 0);
     point(x,y);
   }
   

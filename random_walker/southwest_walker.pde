@@ -8,7 +8,7 @@ class SWWalker {
   }
   
   void display(){
-    stroke(204, 102, 0);
+    stroke(155, 155, 155);
     point(x, y);
   }
   
