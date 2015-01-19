@@ -5,6 +5,7 @@ Random generator;
 
 void setup(){
   size(640, 360);
+  background(0);
   generator = new Random(); // uses Java random library. returns a double.
 }
 
