@@ -3,6 +3,8 @@ RandomWalker w;
 SWWalker sww;
 EastWalker ew;
 MouseWalker mw;
+GaussianWalker gw;
+CustomWalker cw;
 
 void setup(){
   size(640, 360);
@@ -10,8 +12,11 @@ void setup(){
   sww = new SWWalker();
   ew = new EastWalker();
   mw = new MouseWalker();
+  gw = new GaussianWalker();
+  cw = new CustomWalker();
   
   background(255);
+  strokeWeight(2);
 }
 
 void draw(){
@@ -26,4 +31,10 @@ void draw(){
   
   mw.step();
   mw.display();
+  
+  gw.step();
+  gw.display();
+  
+  cw.step();
+  cw.display();
 }
