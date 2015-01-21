@@ -5,6 +5,8 @@ EastWalker ew;
 MouseWalker mw;
 GaussianWalker gw;
 CustomWalker cw;
+PerlinWalker pw;
+PerlinStepper ps;
 
 void setup(){
   size(640, 360);
@@ -14,6 +16,8 @@ void setup(){
   mw = new MouseWalker();
   gw = new GaussianWalker();
   cw = new CustomWalker();
+  pw = new PerlinWalker();
+  ps = new PerlinStepper();
   
   background(255);
   strokeWeight(2);
@@ -37,4 +41,10 @@ void draw(){
   
   cw.step();
   cw.display();
+  
+  pw.step();
+  pw.display();
+  
+  ps.step();
+  ps.display();
 }
