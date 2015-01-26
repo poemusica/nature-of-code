@@ -10,6 +10,12 @@ void setup(){
 }
 
 void draw(){
+  beginCamera();
+  translate(width/2, height/2);
+  rotateY(0.01);
+  translate(-width/2, -height/2);
+  endCamera();
+
   background(255);
   ball.move();
   ball.display();
