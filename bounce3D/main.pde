@@ -7,13 +7,14 @@ void setup(){
   size(640, 360, P3D);
   background(255);
   ball = new Ball();
+  beginCamera();
+  translate(width/2, height/2);
+  endCamera();
 }
 
 void draw(){
   beginCamera();
-  translate(width/2, height/2);
   rotateY(0.01);
-  translate(-width/2, -height/2);
   endCamera();
 
   background(255);
@@ -23,10 +24,7 @@ void draw(){
 }
 
 void drawBox(){
-  pushMatrix();
-  translate(width/2, height/2);
   stroke(0);
   noFill();
   box(200);
-  popMatrix();
 }
