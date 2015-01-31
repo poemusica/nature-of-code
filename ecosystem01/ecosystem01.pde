@@ -31,6 +31,30 @@ class Mover{
     }
   }
   
+  void bounce(){
+    if ((loc.x == width) || (loc.x == 0)){
+      vel.x = vel.x * -1;
+    }
+    if ((loc.y == height) || (loc.y == 0)){
+      vel.y = vel.y * -1;
+    }
+  }
+  
+  void wrap(){
+    if (loc.x > width + size/2){
+      loc.x = 0;
+    }
+    if (loc.x < -size/2){
+      loc.x = width;
+    }
+    if (loc.y > height + size/2){
+      loc.y = 0;
+    }
+    if (loc.y < -size/2){
+      loc.y = height;
+    } 
+  }
+  
 }
 
 

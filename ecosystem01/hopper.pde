@@ -6,29 +6,27 @@ class Hopper extends Mover{
     acc = PVector.random2D();
   }
   
-  void bounce(){
-    if ((loc.x == width) || (loc.x == 0)){
-      vel.x = vel.x * -1;
-    }
-    if ((loc.y == height) || (loc.y == 0)){
-      vel.y = vel.y * -1;
-    }
-  }
-  
   void update(){
-    float t = frameCount/20.0;
-    float mag = t - floor(t);
-    println(mag);
-    
-    if (mag < 0.1){
-      acc = PVector.random2D();
+    if (frameCount % 100 == 1){
+      vel.add(PVector.mult(acc, topspeed));
+      println("speed up");
+    }
+    else {
+      vel.add(PVector.mult(acc, -topspeed/99));
     }
     
-    acc.setMag(mag);
+// alternate version that also works pretty well for hop    
+//    else {
+//      if (vel.mag() < 0.1){
+//        vel.setMag(0);
+//      }
+//      else {
+//        vel.add(PVector.mult(acc, -1.0/10));
+//      }
+//    }
     
-    vel.add(acc);
     vel.limit(topspeed);
     loc.add(vel);
-    bounce();
+    wrap();
   }
 }

@@ -8,7 +8,6 @@ void setup(){
 void draw(){
   background(255);
   h.update();
-  h.checkEdges();
   h.display();
   
 }
