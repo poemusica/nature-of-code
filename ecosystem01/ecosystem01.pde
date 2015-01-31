@@ -1,52 +1,36 @@
 class Mover{
   PVector loc, vel;
   float topspeed;
+  int size;
   
-  Mover(int x, int y){
+  Mover(int x, int y, int _size){
     loc = new PVector(x, y);
     vel = new PVector(0, 0);
     topspeed = 5;
+    size = _size;
   }
   
   void display(){
     stroke(0);
     fill(175);
-    ellipse(loc.x, loc.y, 50, 50);
+    ellipse(loc.x, loc.y, size, size);
   }
   
   void checkEdges(){
-    if (loc.x > width){
-      loc.x = width;
+    if (loc.x > width - size/2){
+      loc.x = width - size/2;
     }
-    if (loc.x < 0){
-      loc.x = 0;
+    if (loc.x < 0 + size/2){
+      loc.x = 0 + size/2;
     }
-    if (loc.y > height){
-      loc.y = height;
+    if (loc.y > height - size/2){
+      loc.y = height - size/2;
     }
-    if (loc.y < 0){
-      loc.y = 0;
+    if (loc.y < 0 + size/2){
+      loc.y = 0 + size/2;
     }
   }
   
-}
-
-class Hopper extends Mover{
-  
-  Hopper(int x, int y){
-    super(x, y);
-    // do more stuff
-  }
-  
-  void update(){
-    PVector acc;
-    acc = PVector.random2D();
-    acc.mult(1.5);
-    
-    vel.add(acc);
-    vel.limit(topspeed);
-    loc.add(vel);
-  }
 }
 
 

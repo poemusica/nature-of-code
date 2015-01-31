@@ -2,7 +2,7 @@ Hopper h;
 
 void setup(){
   size(640, 360);
-  h = new Hopper(width/2, height/2);
+  h = new Hopper(width/2, height/2, 50);
 }
 
 void draw(){
