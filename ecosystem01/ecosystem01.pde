@@ -1,18 +1,21 @@
 class Mover{
-  PVector loc, vel;
+  PVector loc, vel, acc;
+  int size, fillcolor;
   float topspeed;
-  int size;
   
   Mover(int x, int y, int _size){
     loc = new PVector(x, y);
     vel = new PVector(0, 0);
+    acc = PVector.random2D();
     topspeed = 5;
+    
     size = _size;
+    fillcolor = 175;
+    
   }
   
   void display(){
-    stroke(0);
-    fill(175);
+    fill(fillcolor);
     ellipse(loc.x, loc.y, size, size);
   }
   
