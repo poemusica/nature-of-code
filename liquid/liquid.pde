@@ -15,7 +15,7 @@ class Liquid {
     float s = d.mag();
     d.normalize();
     d.mult(sq(s) * -coefficient);
-    
+    d.mult(m.w/50);
     return d;
   }
   

@@ -1,13 +1,15 @@
 class Mover {
   PVector loc, vel, acc;
-  float mass;
+  float mass, w, h;
   
   Mover(float x, float y) {
     loc = new PVector(x, y);
     vel = new PVector(0, 0);
     acc = new PVector(0, 0);
     
-    mass = random(0.5, 2);
+    mass = 2;
+    w = random(10, 100);
+    h = 10;
   }
   
   void applyForce(PVector force) {
@@ -24,7 +26,7 @@ class Mover {
   void display() {
     stroke(0);
     fill(175);
-    ellipse(loc.x, loc.y, mass * 20, mass * 20);
+    rect(loc.x - w, loc.y - h, w, h);
   }
   
   boolean isInside(Liquid l) {

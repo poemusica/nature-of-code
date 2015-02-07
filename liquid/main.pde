@@ -9,7 +9,7 @@ void setup() {
   liquid = new Liquid();
   movers = new Mover[10];
   for(int i = 0; i < movers.length; i++) {
-    movers[i] = new Mover(random(0, width), random(0, height));
+    movers[i] = new Mover(random(0, width), 0);
   }
 }
 
