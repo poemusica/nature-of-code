@@ -38,7 +38,7 @@ PVector calcWind(Mover m) {
 }
 
 PVector calcFriction(Mover m) {
-  float coefficient = 0.01;
+  float coefficient = map(noise(m.loc.x/100, m.loc.y/100), 0, 1, -0.05, 0.05);
   float normal = 1.0;
   PVector f = m.vel.get();
   f.normalize();
