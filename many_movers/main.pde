@@ -8,9 +8,9 @@ void setup() {
   
   gravity = new PVector(0, 0.1);
   
-  movers = new Mover[1];
+  movers = new Mover[10];
   for(int i = 0; i < movers.length; i++) {
-    movers[i] = new Mover();
+    movers[i] = new Mover(random(0, width), random(0, height));
   }
 }
 
@@ -26,7 +26,6 @@ void draw() {
     m.update();
     m.checkEdges();
     m.display();
-    println(m.loc);
   }
 }
 
@@ -34,7 +33,6 @@ PVector calcWind(Mover m) {
   PVector v = new PVector(0, 0);
   v.x = map(noise(m.loc.x / 100, (frameCount % width) / 100), 0, 1, -0.1, 0.1);
   v.y = map(noise(m.loc.y / 100, (frameCount % height) / 100), 0, 1, -0.1, 0.1);
-  println("wind", v);
   return v;
 }
 
@@ -49,6 +47,5 @@ PVector calcWall(Mover m) {
   v.x = f.x * (dx / (width / 2));
   v.y = f.y * (dy / (height / 2));
   
-  println("wall force", v);
   return v;
 }

@@ -2,12 +2,12 @@ class Mover {
   PVector loc, vel, acc;
   float mass;
   
-  Mover() {
-    loc = new PVector(width/2, height/2);
+  Mover(float x, float y) {
+    loc = new PVector(x, y);
     vel = new PVector(0, 0);
     acc = new PVector(0, 0);
     
-    mass = 1.0;
+    mass = random(0.5, 2);
   }
   
   void applyForce(PVector force) {
