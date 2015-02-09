@@ -24,7 +24,7 @@ void draw(){
     m = movers[i];
     for (int j = 0; j < attractors.length; j++) {
       a = attractors[j];
-      m.applyForce(a.attract(m));
+      m.applyForce(a.ebb(m));
     }
     m.update();
     m.display();

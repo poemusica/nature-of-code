@@ -10,6 +10,15 @@ class Attractor{
     s = mass;
   }
   
+  PVector ebb(Mover m) {
+    PVector force = PVector.sub(loc, m.loc);
+    float dist = force.mag();
+    dist = constrain(dist, 0, 20);
+    float strength = dist / m.mass;
+    force.setMag(strength);
+    return force;
+  }
+  
   PVector attract(Mover m){
     PVector force = PVector.sub(loc, m.loc);
     float dist = force.mag();
