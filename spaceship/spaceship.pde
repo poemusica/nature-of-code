@@ -4,7 +4,6 @@ class Spaceship {
   boolean thrusting; 
   
   Spaceship() {
-//    loc = new PVector(random(width), random(height));
     loc = new PVector(width/2, height/2);
     ang = random(TWO_PI);
     vel = new PVector(0, 0);
