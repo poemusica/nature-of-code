@@ -1,27 +1,33 @@
 class Car{
   PVector loc, vel, acc;
-  int maxspeed, minspeed;
+  int maxspeed;
+  float h;
   
   Car(){
     loc = new PVector(random(0, width), random(0, height));
-    vel = new PVector(0, 0);
+    vel = PVector.random2D();
+    h = vel.heading();
+    vel.mult(0);
     acc = new PVector(0, 0);
-    maxspeed = 10;
+    maxspeed = 5;
   }
   
   void display(){
     fill(255, 255, 0);
     pushMatrix();
     translate(loc.x, loc.y);
-    ellipse(0, 0, 10, 10);
+    rotate(h);
+    triangle(0, 10, 20, 0, 0, -10);
+    ellipse(20, 0, 5, 5);    
     popMatrix();
   }
   
   void move(){
-    acc.normalize();
     vel.add(acc);
+    h = vel.heading();
     vel.limit(maxspeed);
     loc.add(vel);
+    acc.mult(0);
   }
   
   void checkEdges(){
