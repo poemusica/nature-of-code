@@ -9,12 +9,12 @@ void setup() {
 }
 
 void draw() {
-  strokeWeight(2);
-  stroke(175);
-  r += 0.1;
-  theta += 1;
-  y = r * sin(theta);
+  fill(0);
+  r += 0.05;
+  theta += 0.01;
+  translate(width/2, height/2);
   x = r * cos(theta);
-  point(x, y);
+  y = r * sin(theta);
+  ellipse(x, y, 16, 16);
   
 }
