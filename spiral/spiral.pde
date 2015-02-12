@@ -10,6 +10,7 @@ void setup() {
 
 void draw() {
   fill(0);
+  stroke(2);
   r += 0.05;
   theta += 0.01;
   translate(width/2, height/2);
