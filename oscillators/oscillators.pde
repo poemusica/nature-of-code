@@ -3,13 +3,14 @@ class Oscillator  {
   PVector loc, angles;
   PVector aVelocity;
   PVector amplitude;
+  float angR;
  
-  Oscillator(float vx, float vy)  {
+  Oscillator(float _angR) {
+    angR = _angR;
+    println(angR);
     loc = new PVector();
     angles = new PVector();
-    aVelocity = new PVector(vx, vy);
-    println(aVelocity);
-//    aVelocity = new PVector(random(-0.05,0.05),random(-0.05,0.05));
+    aVelocity = new PVector(0, 0.05);
     amplitude = new PVector(width/2, height/2);
   }
  
@@ -18,14 +19,16 @@ class Oscillator  {
   }
  
   void display()  {
-
-    loc.x = sin(angles.x)*amplitude.x;
-    loc.y = sin(angles.y)*amplitude.y;
+    float x = sin(angles.x);
+    float y = sin(angles.y);
+    loc.x = map(x, -1, 1, -amplitude.x, amplitude.x) ;
+    loc.y = map(y, -1, 1, 16, amplitude.y - 16);
  
     pushMatrix();
     translate(width/2,height/2);
+    rotate(angR);
     stroke(0);
-    fill(175);
+    fill(255 % (angR * 65) );
 
     line(0,0,loc.x, loc.y);
     ellipse(loc.x, loc.y, 16, 16);

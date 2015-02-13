@@ -2,12 +2,9 @@ Oscillator[] oscillators;
 
 void setup() {
   size(640, 360);
-  oscillators = new Oscillator[4];
-  PVector temp = new PVector(0, 0.07);
+  oscillators = new Oscillator[6];
   for (int i = 0; i < oscillators.length; i++) {
-    oscillators[i] = new Oscillator(temp.x, temp.y);
-    temp.x *= -1;
-    temp.set(temp.y, temp.x);
+    oscillators[i] = new Oscillator(i * (TWO_PI / (oscillators.length)));
   }
 }
 
