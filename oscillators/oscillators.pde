@@ -18,17 +18,14 @@ class Oscillator  {
   }
  
   void display()  {
-    float x = sin(angles.x); // currently, this is zero.
-    float y = sin(angles.y + angR);
-    loc.x = map(x, -1, 1, -amplitude.x, amplitude.x); // currently, this is zero.
-    loc.y = map(y, -1, 1, 16, amplitude.y - 16);
+    float y = sin(angles.y + angR); // creates the casscade effect.
+    loc.y = map(y, -1, 1, amplitude.y/4, amplitude.y);
  
     pushMatrix();
     translate(width/2,height/2);
     rotate(angR);
     stroke(0);
     fill(255 % (angR * 65) );
-
     line(0,0,loc.x, loc.y);
     ellipse(loc.x, loc.y, 16, 16);
     popMatrix();

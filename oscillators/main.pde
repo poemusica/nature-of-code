@@ -4,6 +4,7 @@ void setup() {
   size(640, 360);
   oscillators = new Oscillator[11];
   for (int i = 0; i < oscillators.length; i++) {
+    // evenly space angles around centerpoint.
     oscillators[i] = new Oscillator(i * (TWO_PI / (oscillators.length)));
   }
 }
