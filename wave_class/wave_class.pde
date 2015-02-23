@@ -22,14 +22,17 @@ class Wave {
     }
   
   void display() {
+    strokeWeight(2);
+    noFill();
+    pushMatrix();
+    translate(loc.x, loc.y);
+    beginShape();
     for (float x = -wlength/2; x <= wlength/2; x += xSpacing) {
       float y = map(sin( (angSpacing * x) + angle), -1, 1, -amplitude, amplitude);
-      fill(110, 110);
-      pushMatrix();
-      translate(loc.x, loc.y);
-      ellipse(x, y, r, r);
-      popMatrix();
+      curveVertex(x, y);
     }
+    endShape();
+    popMatrix();
     angle += angVel;
   }
   
