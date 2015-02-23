@@ -27,7 +27,7 @@ class Wave {
     translate(loc.x, loc.y);
     for (float x = -wlength/2; x <= wlength/2; x += xSpacing) {
       float y = map(sin( (angSpacing * x) + angle), -1, 1, -amplitude, amplitude);
-      ellipse(x, y, r, r);
+      line(x, 0, x, y);
     }
     popMatrix();
     angle += angVel;
