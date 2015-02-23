@@ -1,4 +1,6 @@
-
+float xSpacing, angSpacing;
+float angle, angVel;
+float r;
 
 void setup() {
   size(640, 360);
