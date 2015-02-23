@@ -1,6 +1,4 @@
-float xSpacing, angSpacing;
-float angle, angVel;
-float r;
+
 
 void setup() {
   size(640, 360);
@@ -16,7 +14,6 @@ void setup() {
 
 void draw() {
   background(210);
-  PVector p = new PVector();
   for (int x = 0; x <= width; x += xSpacing) {
 //    float y = map( noise( (angSpacing * x) + angle), 0, 1, 0, height); // perlin noise version.
     float y = map(sin( (angSpacing * x) + angle), -1, 1, 0, height);
