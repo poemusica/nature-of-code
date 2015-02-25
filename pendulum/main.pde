@@ -8,6 +8,7 @@ void setup() {
 }
 
 void draw() {
+  background(210);
   pen.update();
   pen.display();
 }
