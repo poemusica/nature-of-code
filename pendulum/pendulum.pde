@@ -1,14 +1,15 @@
 class Pendulum{
-  PVector pivot;
+  PVector pivot, bob;
   float angle, angVel, angAcc, damping;
   float arm;
   
-  Pendulum() {
-    arm = 300;
-    pivot = new PVector(width/2, 0);
-    angle = radians(90);
+  Pendulum(PVector p, float _arm, float _ang) {
+    arm = _arm;
+    pivot = p;
+    angle = radians(_ang);
     angVel = 0;
     angAcc = 0;
+    bob = new PVector(arm * sin(angle), arm* cos(angle));
     damping = 0.995;
   }
   
@@ -17,14 +18,14 @@ class Pendulum{
     angVel += angAcc;
     angle += angVel;
     angVel *= damping;
+    
+    bob.set(arm * sin(angle), arm* cos(angle));
   }
   
   void display() {
     translate(pivot.x, pivot.y);
-    float x = arm * sin(angle);
-    float y = arm * cos(angle);
-    line(0, 0, x, y);
+    line(0, 0, bob.x, bob.y);
     fill(175);
-    ellipse(x, y, 30, 30);
+    ellipse(bob.x, bob.y, 30, 30);
   }
 }
