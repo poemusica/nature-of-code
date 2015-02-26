@@ -15,18 +15,23 @@ class Box{
   
   void update() {
     vel.add(acc);
-    loc.add(vel);
-    println(loc);
-    acc.mult(0);
-    
-    if (loc.y >= width) {
-      loc.y = width;
+    if (loc.x >= width) {
+      loc.x = width;
     }
+    if (loc.y >= height/2 - r) {
+      loc.y = height/2 - r;
+    }
+    else {
+      loc.add(vel);
+    }
+    acc.mult(0);
   }
   
   void display() {
-    translate(0, height/2 - r);
-    rotate(radians(-90 + incline));
-    rect(loc.x, loc.y, 2*r, 2*r);
+    translate(0, height/2);
+    translate(loc.x, loc.y);
+    rotate(radians(incline));
+    translate(0, -r);
+    rect(0, 0, 2*r, 2*r);
   }
 }
