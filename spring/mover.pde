@@ -15,7 +15,7 @@ class Mover{
   }
   
   void update() {
-    applyForce(gravity);
+//    applyForce(gravity);
     if (mousePressed) {
       PVector wind = new PVector(map(noise(mouseX/100), 0, 1, -0.05, 0.05), map(noise(mouseY/100), 0, 1, -0.05, 0.05));
       applyForce(wind);

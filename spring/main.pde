@@ -1,4 +1,3 @@
-Spring s;
 Spring spring;
 Mover b;
 Mover p;
@@ -8,7 +7,6 @@ void setup() {
   size(640, 360);
   b = new Mover();
   p = new Mover();
-  s = new Spring(0, 0);
   spring = new Spring(b.loc.x, b.loc.y);
   gravity = new PVector(0, 0.05);
 }
@@ -16,12 +14,20 @@ void setup() {
 void draw() {
   background(210);
   translate(width/2, 0);
-  
-  s.connect(b);
-  spring.update(b);
-  spring.connect(p);
+  spring.update(p); // sets anchor
+  spring.constrainLen(b);
+  spring.connect(b); // applies spring force
   b.update();
-  b.display();
+  
+  spring.update(b); // sets anchor
+  spring.constrainLen(p);
+  spring.connect(p); // applies spring force
   p.update();
+  
+  spring.display(b);
+  spring.display(p);
+  fill(175);
+  b.display();
+  fill(255);
   p.display();
 }
