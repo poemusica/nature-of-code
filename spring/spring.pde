@@ -2,10 +2,10 @@ class Spring{ // structure this class to extend Mover?
   PVector anchor;
   float restLen, k;
   
-  Spring() {
-    restLen = 200;
+  Spring(float _x, float _y) {
+    restLen = 100;
     k = 0.01;
-    anchor = new PVector(0, 0);
+    anchor = new PVector(_x, _y);
   }
   
   PVector springForce(Mover mover) {
@@ -16,7 +16,13 @@ class Spring{ // structure this class to extend Mover?
     return f;
   }
   
+  void update(Mover mover) {
+    anchor = mover.loc;
+  }
+  
   void connect(Mover mover) {
+    PVector f = springForce(mover);
+    mover.applyForce(f);
     line(anchor.x, anchor.y, mover.loc.x, mover.loc.y);
   }
 }
