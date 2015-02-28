@@ -20,7 +20,6 @@ class Oscillator {
   void oscillate() {
     aVelocity.add(aAcceleration);
     angles.add(aVelocity);
-    println(aVelocity, aAcceleration);
     aAcceleration.mult(0);
   }
 

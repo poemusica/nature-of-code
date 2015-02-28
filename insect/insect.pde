@@ -17,7 +17,6 @@ class Insect {
         angR = PI;
       }
       oscillators[i] = new Oscillator(x, y + step * (i % (oscillators.length / 2)), angR);
-      println(x, y + step * (i % (oscillators.length / 2)));
     }
   }
 
