@@ -23,10 +23,10 @@ class Hopper extends Mover{
     loc.add(vel);
     wrap();
     
-    oscR.aVelocity = vel.mag() * 0.5;
+    oscR.aVelocity = vel.mag() * 0.3;
     oscR.oscillate();
     
-    oscL.aVelocity = vel.mag() * 0.5;
+    oscL.aVelocity = vel.mag() * 0.3;
     oscL.oscillate();
   }
   
@@ -35,10 +35,18 @@ class Hopper extends Mover{
     fill(200, 235, 0);
     ellipse(loc.x, loc.y, size, size);
     
+//    PVector p = new PVector(0, 1);
+//    p.rotate(vel.heading());
+//    p.setMag(oscR.arm/2);
+//    oscR.origin = PVector.add(loc, p);
     oscR.origin = loc;
     oscR.angR = vel.heading();
     oscR.display();
     
+//    p.set(0, 1);
+//    p.rotate(vel.heading() + PI);
+//    p.setMag(oscR.arm/2);
+//    oscL.origin = PVector.add(loc, p);
     oscL.origin = loc;
     oscL.angR = vel.heading() + PI;
     oscL.display();

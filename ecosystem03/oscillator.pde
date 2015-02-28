@@ -27,10 +27,10 @@ class Oscillator  {
     
     stroke(0);
     fill(255);
-    loc.set(0, arm);
-    loc.rotate(oscillate());
-    line(0,0,loc.x, loc.y);
-    ellipse(loc.x, loc.y, 16, 16);
+    
+    rotate(oscillate());
+    loc.set(0, arm/2);
+    ellipse(loc.x, loc.y, 16, arm);
     
     popMatrix();
   }
