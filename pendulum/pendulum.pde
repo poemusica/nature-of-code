@@ -19,7 +19,12 @@ class Pendulum{
     angle += angVel;
     angVel *= damping;
     
-    bob.set(arm * sin(angle), arm * cos(angle));
+    // PVector version
+    bob.set(0, arm);
+    bob.rotate(angle);
+    
+    // polar coordinate version
+//    bob.set(arm * sin(angle), arm * cos(angle));
   }
   
   void display() {
