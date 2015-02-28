@@ -1,10 +1,14 @@
 class Hopper extends Mover{
-  Oscillator osc;
+  Oscillator oscR;
+  Oscillator oscL;
   
   Hopper(int x, int y, int _size){
     super(x, y, _size);
     topspeed = 2;
-    osc = new Oscillator();
+    oscR = new Oscillator();
+    oscR.range.set(PI/4, -PI/4);
+    oscL = new Oscillator();
+    oscL.range.set(-PI/4, PI/4);
   }
   
   void update(){
@@ -19,16 +23,24 @@ class Hopper extends Mover{
     loc.add(vel);
     wrap();
     
-    osc.aVelocity = PVector.mult(vel, 0.4);
-    osc.angR = vel.heading() + PI;
-    osc.origin = loc;
-    osc.oscillate();
+    oscR.aVelocity = vel.mag() * 0.5;
+    oscR.oscillate();
+    
+    oscL.aVelocity = vel.mag() * 0.5;
+    oscL.oscillate();
   }
   
   void display(){
     noStroke();
     fill(200, 235, 0);
     ellipse(loc.x, loc.y, size, size);
-    osc.display();
+    
+    oscR.origin = loc;
+    oscR.angR = vel.heading();
+    oscR.display();
+    
+    oscL.origin = loc;
+    oscL.angR = vel.heading() + PI;
+    oscL.display();
   }
 }
