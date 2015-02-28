@@ -19,7 +19,7 @@ class Hopper extends Mover{
     loc.add(vel);
     wrap();
     
-    osc.aVelocity = PVector.mult(vel, 0.40);
+    osc.aVelocity = PVector.mult(vel, 0.4);
     osc.angR = vel.heading() + PI;
     osc.origin = loc;
     osc.oscillate();
