@@ -35,8 +35,7 @@ class Wave {
     loc.add(vel);
   }
   
-  void display() {
-    
+  void displayHeadBob() {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
@@ -44,13 +43,30 @@ class Wave {
     for (float x = 0; x >= -wlength; x -= xSpacing) {
       float y = map(sin( (angSpacing * x) + angle), -1, 1, -amplitude, amplitude);
       ellipse(x, y, r, r);
-//      line(x, 0, x, y);
     }
     fill(0);
-    ellipse(0, map(sin((angSpacing * 0) + angle), -1, 1, -amplitude, amplitude), r, r);
-    line(0, 0, -wlength, 0);
-    fill(255, 0, 0);
-    ellipse(0, 0, 5, 5);
+    ellipse(0, map(sin((angSpacing * 0) + angle), -1, 1, -amplitude, amplitude), r, r); // draw head at first point
+    popMatrix();
+    angle += angVel;
+  }
+  
+  void displayFixedHead() {
+    
+    pushMatrix();
+    translate(loc.x, loc.y);
+    rotate(vel.heading());
+    
+    pushMatrix();
+    translate(0, map(sin(angle), -1, 1, -amplitude, amplitude) * -1); // reverse y-displacement of first point 
+    fill(110, 90);
+    for (float x = 0; x >= -wlength; x -= xSpacing) {
+      float y = map(sin( (angSpacing * x) + angle), -1, 1, -amplitude, amplitude);
+      ellipse(x, y, r, r);
+    }
+    popMatrix();
+    
+    fill(0);
+    ellipse(0, 0, r, r); // draw head at loc
     popMatrix();
     angle += angVel;
   }

@@ -1,12 +1,16 @@
-Wave a, b, c;
+Wave w, v;
 
 void setup(){
   size(640, 360);
-  a = new Wave(random(width), random(height));
+  w = new Wave(random(width), random(height));
+  v = new Wave(random(width), random(height));
 }
 
 void draw(){
   background(210);
-  a.update();
-  a.display();
+  w.update();
+  w.displayFixedHead();
+  
+  v.update();
+  v.displayHeadBob();
 }
