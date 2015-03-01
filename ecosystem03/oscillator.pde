@@ -1,13 +1,12 @@
 class Oscillator  {
  
-  PVector origin, loc, range;
+  PVector loc, range;
   float angle, aVelocity;
   float arm, angR;
  
   Oscillator() {
     angR = 0;
-    arm = 50;
-    origin = new PVector();
+    arm = 30;
     loc = new PVector();
     range = new PVector();
     angle = 0;
@@ -22,15 +21,15 @@ class Oscillator  {
  
   void display()  {
     pushMatrix();
-    translate(origin.x, origin.y);
+    translate(loc.x, loc.y);
     rotate(angR);
     
-    stroke(0);
-    fill(255);
+//    fill(255);
     
     rotate(oscillate());
-    loc.set(0, arm/2);
-    ellipse(loc.x, loc.y, 16, arm);
+    ellipse(arm/2, 0, arm, 15);
+    fill(200, 235, 0);
+    ellipse(0, 0, 5, 5);
     
     popMatrix();
   }
