@@ -1,10 +1,14 @@
 class Insect {
   Oscillator[] oscillators;
+  PVector loc, vel, acc;
   float w, h;
 
   Insect() {
+    loc = new PVector(width/2, height/2);
+    vel = new PVector(0, 0);
+    acc = new PVector(0, 0);
     w = 50;
-    h = 100;
+    h = 50;
     oscillators = new Oscillator[10];
     float x = -w/2;
     float y = -h/2;
@@ -20,23 +24,48 @@ class Insect {
     }
   }
 
+  void update() {
+    PVector mouse = new PVector(mouseX, mouseY);
+    acc = PVector.sub(mouse, loc);
+    float d = acc.mag();
+    acc.normalize();
+    acc.mult(d/10000);
+    vel.add(acc);
+    vel.limit(5);
+    loc.add(vel);
+    wrap();
+  }
+  
   void display() {
+    pushMatrix();
+    translate(loc.x, loc.y);
+    rotate(vel.heading() + PI/2);
     for (int i = 0; i < oscillators.length; i++) {
       Oscillator osc = oscillators[i];
-      if (mousePressed == false && osc.aVelocity.y > 0.15) {
-        osc.aAcceleration.set(0, -0.005);
-      }
-      if (mousePressed == true) {
-        osc.aAcceleration.set(0, 0.0025); 
-      }
-      osc.oscillate();
+      osc.oscillate(acc);
       osc.display();
     }
-    
-    pushMatrix();
-    translate(width/2, height/2);
+    acc.mult(0);
+
     fill(175);
     rect(0, 0, w, h + 50, 7);
     popMatrix();
   }
+  
+  void wrap(){
+    if (loc.x > width + h/2){
+      loc.x = 0;
+    }
+    if (loc.x < -h/2){
+      loc.x = width;
+    }
+    if (loc.y > height + h/2){
+      loc.y = 0;
+    }
+    if (loc.y < -h/2){
+      loc.y = height;
+    }
+  }
+  
+  
 }

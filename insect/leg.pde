@@ -9,7 +9,7 @@ class Oscillator {
     angR = _angR;
     loc = new PVector(_x, _y);
     angles = new PVector();
-    aVelocity = new PVector(0.15, 0.15);
+    aVelocity = new PVector(0, 0);
     aAcceleration = new PVector(0, 0);
     amplitude = new PVector(5, 10);
     sign = abs(loc.x)/loc.x;
@@ -17,7 +17,9 @@ class Oscillator {
     yoff = random(-PI, PI);
   }
 
-  void oscillate() {
+  void oscillate(PVector _acc) {
+    aAcceleration.set(_acc);
+    aAcceleration.mult(0.1);
     aVelocity.add(aAcceleration);
     angles.add(aVelocity);
     aAcceleration.mult(0);
@@ -31,7 +33,6 @@ class Oscillator {
     y = map(y, -1, 1, -amplitude.y * sign, amplitude.y * sign);
 
     pushMatrix();
-    translate(width/2, height/2);
     rotate(angR);
     stroke(0);
     line(0, loc.y, loc.x + (sign * 50), loc.y + y);
