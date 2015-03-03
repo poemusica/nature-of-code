@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 Spaceship ss;
 PVector drag;
 

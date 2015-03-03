@@ -2,6 +2,7 @@ class Spaceship {
   PVector loc, vel, acc;
   float ang, mass, size;
   boolean thrusting; 
+  ParticleSystem psL, psR;
   
   Spaceship() {
     loc = new PVector(width/2, height/2);
@@ -12,6 +13,8 @@ class Spaceship {
     mass = 40;
     size = mass;
     thrusting = false;
+    psL = new ParticleSystem();
+    psR = new ParticleSystem();
   }
   
   void thrust() {
@@ -34,13 +37,25 @@ class Spaceship {
     acc.mult(0);
   }
   
-  void display() {
-    fill(175);
-    strokeWeight(2);
+  void display() {   
+    psL.run();
+    psR.run();
+    
+    pushMatrix();
     translate(loc.x, loc.y);
     rotate(ang);
+    
+    fill(175);
+    strokeWeight(2);
+    
     pushStyle();
     if (thrusting == true) {
+      PVector emitterL = new PVector(0, size/4);
+      PVector emitterR = new PVector(0, -size/4);
+      psL.loc.set(emitterL);
+      psR.loc.set(emitterR);
+      psL.emit(vel, loc, ang);
+      psR.emit(vel, loc, ang);
       fill(200, 0, 0);
     }
     rect(0, size/4, size/4, size/4);
@@ -48,6 +63,7 @@ class Spaceship {
     popStyle();
     
     triangle(0, size/2, size, 0, 0, -size/2);
+    popMatrix();
   }
   
   void checkEdges() {
