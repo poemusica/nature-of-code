@@ -4,7 +4,7 @@ class Particle{
   float mass, lifespan;
   
   Particle() {
-    loc = new PVector(random(width), 0);
+    loc = new PVector(random(width), height/4);
     vel = new PVector(0, 0);
     acc = PVector.random2D();
     
@@ -17,7 +17,7 @@ class Particle{
   }
   
   void reset() {
-    loc = new PVector(random(width), 0);
+    loc = new PVector(random(width), height/4);
     vel = new PVector(0, 0);
     acc = PVector.random2D();
     
@@ -46,14 +46,14 @@ class Particle{
     
     applyForce(gravity);
     vel.add(acc);
-    loc.add(acc);
+    loc.add(vel);
     acc.mult(0);
     
     aVel += aAcc;
     angle += aVel;
     aAcc = 0;
     
-    lifespan -= 2;
+    lifespan -= 4;
   }
   
   void display() {
