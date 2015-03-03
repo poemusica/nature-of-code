@@ -9,7 +9,7 @@ class Particle{
     acc = PVector.random2D();
     
     angle = 0;
-    aVel = 0.1;
+    aVel = acc.x/10;
     aAcc = 0;
     
     mass = 1;
