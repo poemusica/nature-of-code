@@ -3,8 +3,8 @@ class Particle{
   float angle, aVel, aAcc;
   float mass, lifespan;
   
-  Particle() {
-    loc = new PVector(random(width), height/4);
+  Particle(PVector l) {
+    loc = l.get();
     vel = new PVector(0, 0);
     acc = PVector.random2D();
     
@@ -13,18 +13,6 @@ class Particle{
     aAcc = 0;
     
     mass = 1;
-    lifespan = 255;
-  }
-  
-  void reset() {
-    loc = new PVector(random(width), height/4);
-    vel = new PVector(0, 0);
-    acc = PVector.random2D();
-    
-    angle = 0;
-    aVel = 0.1;
-    aAcc = 0;
-    
     lifespan = 255;
   }
   
@@ -39,11 +27,7 @@ class Particle{
     acc.add(f);
   }
   
-  void update() {
-    if (isDead() == true) {
-      reset();
-    }
-    
+  void update() {    
     applyForce(gravity);
     vel.add(acc);
     loc.add(vel);
