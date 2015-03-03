@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 ArrayList<Particle> particles;
 PVector gravity;
 
@@ -13,11 +15,13 @@ void draw() {
   
   particles.add(new Particle());
   
-  for (int i = particles.size() - 1; i > 0 ; i--) {
-    Particle p = particles.get(i);
+  Iterator<Particle> iter = particles.iterator();
+  
+  while (iter.hasNext()) {
+    Particle p = iter.next();
     p.run();
     if (p.isDead()) {
-      particles.remove(i); // causes skipping! BAD!
+      iter.remove();
     }
   }
 }
