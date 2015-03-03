@@ -2,6 +2,7 @@ import java.util.Iterator;
 
 ParticleSystem ps;
 PVector gravity;
+PVector emitter;
 
 void setup() {
   size(640, 320);
@@ -12,5 +13,7 @@ void setup() {
 
 void draw() { 
   background(255);
+  emitter = new PVector(mouseX, mouseY);
+  ps.origin.set(emitter);
   ps.run();
 }
