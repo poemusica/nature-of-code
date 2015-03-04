@@ -10,7 +10,7 @@ void setup() {
   size(640, 320);
   rectMode(CENTER);
   pSystems = new ArrayList<ParticleSystem>();
-  mousePS = new ParticleSystem(new PVector(width/2, height/2));
+  mousePS = new ParticleSystem(new PVector(mouseX, mouseY));
   gravity = new PVector(0, 0.1); 
 }
 
