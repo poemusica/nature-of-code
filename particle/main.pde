@@ -17,10 +17,14 @@ void setup() {
 void draw() { 
   background(255);
   mousePS.origin.set(new PVector(mouseX, mouseY));
+  mousePS.lifespan = 300;
   mousePS.run();
   
-  for (ParticleSystem pSystem : pSystems) {
-    pSystem.run();
+  Iterator<ParticleSystem> iter = pSystems.iterator();
+  while (iter.hasNext()) {
+    ParticleSystem pSys = iter.next();
+    pSys.run();
+    if (pSys.isDead()) { iter.remove(); }
   } 
 }
 
