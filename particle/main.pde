@@ -10,15 +10,13 @@ void setup() {
   size(640, 320);
   rectMode(CENTER);
   pSystems = new ArrayList<ParticleSystem>();
-  emitter = new PVector(width/2, height/2);
-  mousePS = new ParticleSystem(emitter);
+  mousePS = new ParticleSystem(new PVector(width/2, height/2));
   gravity = new PVector(0, 0.1); 
 }
 
 void draw() { 
   background(255);
-  emitter = new PVector(mouseX, mouseY);
-  mousePS.origin.set(emitter);
+  mousePS.origin.set(new PVector(mouseX, mouseY));
   mousePS.run();
   
   for (ParticleSystem pSystem : pSystems) {
@@ -27,6 +25,5 @@ void draw() {
 }
 
 void mouseClicked() {
-  emitter = new PVector(mouseX, mouseY);
-  pSystems.add(new ParticleSystem(emitter));
+  pSystems.add(new ParticleSystem(new PVector(mouseX, mouseY)));
 }
