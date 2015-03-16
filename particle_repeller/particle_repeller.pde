@@ -8,6 +8,7 @@ class Repeller {
     size = 20;
   }
   
+  // alternatively, repel functions only on particles and particle system has a method applyRepeller.
   void repel(ParticleSystem sys) {
     PVector force;
     float d;
