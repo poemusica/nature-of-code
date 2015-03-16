@@ -29,7 +29,7 @@ class Particle{
   }
   
   void update() {
-    applyForce(gravity);
+    applyForce(gravity); // default force applied.
     vel.add(acc);
     loc.add(vel);
     acc.mult(0);

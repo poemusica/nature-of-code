@@ -6,7 +6,7 @@ class ParticleSystem {
   ParticleSystem(PVector _orig) {
     particles = new ArrayList<Particle>();
     origin = _orig.get();
-    lifespan = 999999999;
+    lifespan = 400;
   }
   
   boolean isDead() {
@@ -23,6 +23,13 @@ class ParticleSystem {
     }
   }
   
+  // for forces that affect the entire system
+  void applyForce(PVector force) {
+    for (Particle p : particles) {
+      p.applyForce(force);
+    }
+  }
+  
   void run() {
     if (lifespan > 0) { addParticle(); }
     
@@ -32,6 +39,6 @@ class ParticleSystem {
       p.run();
       if (p.isDead()) { iter.remove(); }
     }
-    lifespan -= 1;
+    lifespan -= 0;
   }
 }

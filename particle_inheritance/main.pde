@@ -12,5 +12,6 @@ void setup() {
 
 void draw() {
   background(210);
+  ps.applyForce(new PVector(map(noise(frameCount/100), 0, 1, -0.05, 0.05), map(noise(millis()), 0, 1, -0.05, 0.05)));
   ps.run();
 }

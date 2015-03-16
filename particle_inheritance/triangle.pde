@@ -11,7 +11,7 @@ class Triangle extends Particle {
   
   void update() {
     PVector g = new PVector(map(loc.x, 0, width, -0.2, 0.2), map(loc.y, 0, height, -0.2, 0.2));
-    applyForce(g);
+    applyForce(g); // alternate force applied instead of default (gravity).
     vel.add(acc);
     loc.add(vel);
     acc.mult(0);
