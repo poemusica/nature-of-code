@@ -1,11 +1,13 @@
 import java.util.Iterator;
-
 PVector gravity;
 ParticleSystem ps;
+PImage img;
 
 void setup() {
   size(640, 360);
+  imageMode(CENTER);
   rectMode(CENTER);
+  img = loadImage("white.png");
   gravity = new PVector(0, 0.1);
   ps = new ParticleSystem(new PVector(width/2, height/2));
 }

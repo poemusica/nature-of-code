@@ -15,12 +15,13 @@ class ParticleSystem {
   }
   
   void addParticle() {
-    float r = random(1);
-    if (r < 0.5) {
-      particles.add(new Triangle(origin));
-    } else {
-      particles.add(new Confetti(origin));
-    }
+    particles.add(new Smoke(origin));
+//    float r = random(1);
+//    if (r < 0.5) {
+//      particles.add(new Triangle(origin));
+//    } else {
+//      particles.add(new Confetti(origin));
+//    }
   }
   
   // for forces that affect the entire system
