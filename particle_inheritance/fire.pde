@@ -1,16 +1,17 @@
-class Smoke extends Particle {
+class Fire extends Particle {
   
-  Smoke(PVector _loc) {
+  Fire(PVector _loc) {
     super(_loc);
     float vx = (float) generator.nextGaussian() * 0.3;
     float vy = (float) generator.nextGaussian() * 0.3 - 1.0;
     acc.set(vx, vy);
+    fadeRate = 7;
   }
   
   void display() {
     imageMode(CENTER);
-    tint(255, lifespan);
-    image(smokeImg, loc.x, loc.y, 20, 20);
+    tint(lifespan, lifespan);
+    image(emberImg, loc.x, loc.y, 50, 50);
   }
   
 }
