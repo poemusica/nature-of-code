@@ -2,7 +2,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 PVector gravity, combustion;
-PImage smokeImg, fireImg, emberImg;
+PImage smokeImg, emberImg, blueImg;
 Random generator;
 
 ArrayList<ParticleSystem> pSystems;
@@ -13,8 +13,8 @@ void setup() {
   rectMode(CENTER);
   generator = new Random();
   smokeImg = loadImage("white.png");
-  fireImg = loadImage("red.png");
   emberImg = loadImage("red2.png");
+  blueImg = loadImage("blue.png");
   gravity = new PVector(0, 0.1);
   combustion = new PVector(0.1, 0);
   pSystems = new ArrayList<ParticleSystem>();

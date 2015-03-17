@@ -5,13 +5,14 @@ class Fire extends Particle {
     float vx = (float) generator.nextGaussian() * 0.3;
     float vy = (float) generator.nextGaussian() * 0.3 - 1.0;
     acc.set(vx, vy);
-    fadeRate = 7;
+    fadeRate = 9;
+    mass = 0.75;
   }
   
   void display() {
     imageMode(CENTER);
-    tint(lifespan, lifespan);
-    image(emberImg, loc.x, loc.y, 25, 25);
+    tint(235, 35, 10, lifespan);
+    image(smokeImg, loc.x, loc.y, lifespan/5, lifespan/5);
   }
   
 }
