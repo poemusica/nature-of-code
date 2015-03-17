@@ -16,12 +16,6 @@ class ParticleSystem {
   
   void addParticle() {
     particles.add(new Particle(origin));
-//    float r = random(1);
-//    if (r < 0.5) {
-//      particles.add(new Triangle(origin));
-//    } else {
-//      particles.add(new Confetti(origin));
-//    }
   }
   
   // for forces that affect the entire system

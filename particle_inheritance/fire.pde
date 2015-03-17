@@ -11,7 +11,7 @@ class Fire extends Particle {
   void display() {
     imageMode(CENTER);
     tint(lifespan, lifespan);
-    image(emberImg, loc.x, loc.y, 50, 50);
+    image(emberImg, loc.x, loc.y, 25, 25);
   }
   
 }

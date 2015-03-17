@@ -8,7 +8,7 @@ Random generator;
 ArrayList<ParticleSystem> pSystems;
 
 void setup() {
-  size(640, 360);
+  size(640, 360, P2D); //blending
   imageMode(CENTER);
   rectMode(CENTER);
   generator = new Random();
@@ -22,6 +22,7 @@ void setup() {
 }
 
 void draw() {
+  blendMode(ADD);
   background(0);
   
   Iterator<ParticleSystem> iter = pSystems.iterator();
