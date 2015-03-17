@@ -35,5 +35,5 @@ void draw() {
 }
 
 void mouseClicked() {
-  pSystems.add(new FireSystem(new PVector(mouseX, mouseY)));
+  pSystems.add(new CrazySystem(new PVector(mouseX, mouseY)));
 }
