@@ -11,7 +11,7 @@ class Ember extends Particle {
   void display() {
     imageMode(CENTER);
     tint(255, lifespan);
-    image(emberImg, loc.x, loc.y, 50, 50);
+    image(emberImg, loc.x, loc.y, 50, 65);
   }
   
 }
