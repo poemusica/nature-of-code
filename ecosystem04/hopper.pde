@@ -14,13 +14,14 @@ class Hopper extends Mover{
     if (frameCount % 100 == 1){
       PVector mouse = new PVector(mouseX, mouseY);
       acc = PVector.sub(mouse, loc);
-      acc.normalize();  
-      vel.add(PVector.mult(acc, topspeed));
+      acc.setMag(topspeed);
     }
     else {
-      vel.add(PVector.mult(acc, -topspeed/100));
+      acc = vel.get();
+      acc.setMag(-topspeed/100);
     }
     
+    vel.add(acc);
     vel.limit(topspeed);
     loc.add(vel);
     wrap();
