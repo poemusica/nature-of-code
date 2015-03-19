@@ -7,6 +7,7 @@ RandomMover r;
 void setup(){
   size(640, 360);
   background(255);
+  ellipseMode(CENTER);
   h = new Hopper(width/2, height/2, 50);
   b = new Bouncer(width/2, height/2, 40);
   f = new Fly(width/2, height/2, 15);
