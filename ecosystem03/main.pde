@@ -8,8 +8,6 @@ void setup(){
 
 void draw(){
   background(255);
-//  fill(250, 8);
-//  rect(0, 0, width, height);
   h.update();
   h.display();
 }
