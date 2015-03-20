@@ -1,7 +1,9 @@
+// eventually refactor some functionality into Creature class
 class Mover{
   PVector loc, vel, acc, fillcolor;
   float topspeed;
   float mass, size;
+  float health;
   
   Mover(PVector _loc){
     loc = _loc.get();
@@ -11,6 +13,8 @@ class Mover{
     
     mass = 1;
     size = (int) generator.nextGaussian() * 2 + 50;
+    health = 400;
+    
     float b = (int) generator.nextGaussian() * 50 + 205;
     fillcolor = new PVector(45, 45, b);
   }
@@ -20,6 +24,18 @@ class Mover{
     update();
     display();
     wrap();
+  }
+  
+  boolean isDead() {
+    if (health <= 0) { return true; }
+    return false;
+  }
+  
+  void hunt(Mover m) {
+    PVector v = PVector.sub(m.loc, loc);
+    if (v.mag() < m.size/2 && abs(v.heading() - vel.heading()) <= radians(10)) {
+      m.health = 0;
+    }
   }
   
   PVector wander() {
