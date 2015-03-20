@@ -16,14 +16,12 @@ class Mover{
     health = 400;
     
     float b = (int) generator.nextGaussian() * 50 + 205;
-    fillcolor = new PVector(45, 45, b);
+    fillcolor = new PVector(0, 0, b);
   }
   
   void run() {
-    applyForce(wander());
     update();
     display();
-    wrap();
   }
   
   boolean isDead() {
@@ -33,8 +31,11 @@ class Mover{
   
   void hunt(Mover m) {
     PVector v = PVector.sub(m.loc, loc);
-    if (v.mag() < m.size/2 && abs(v.heading() - vel.heading()) <= radians(10)) {
+    if (v.mag() < m.size/2 && abs(v.heading() - vel.heading()) <= radians(10) && size >= m.size) {
       m.health = 0;
+      fillcolor.x += 30;
+      fillcolor.x = constrain(fillcolor.x, 0, 255);
+      size += 10;
     }
   }
   
@@ -44,18 +45,20 @@ class Mover{
   }
   
   PVector attract(Mover m) {
+    if (size > m.size) { return new PVector(0, 0); } // don't attract smaller movers. attract larger ones.
     PVector f = PVector.sub(loc, m.loc);
     float dist = f.mag();
     dist = constrain(dist, 10, width/3);
-    f.setMag(50/sq(dist));
+    f.setMag(50/sq(dist)); // attract strength = 50
     return f;
   }
   
   PVector repel(Mover m) {
+    if (size < m.size) { return new PVector(0, 0); } // don't repel larger movers. repel smaller ones.
     PVector f = PVector.sub(m.loc, loc);
     float dist = f.mag();
     dist = constrain(dist, 10, width/3);
-    f.setMag(25/sq(dist)); // repel strength = 25
+    f.setMag(100/sq(dist)); // repel strength = 25
     return f;
   }
   
@@ -74,10 +77,14 @@ class Mover{
   }
   
   void update() {
+    applyForce(wander());
+    
     vel.add(acc);
     vel.limit(topspeed);
     loc.add(vel);
     acc.mult(0);
+    
+    wrap();
   }
   
   void display(){
@@ -86,7 +93,9 @@ class Mover{
     translate(loc.x, loc.y);
     rotate(vel.heading());
     noStroke();
-    fill(fillcolor.x, fillcolor.y, fillcolor.z, 210);
+    float alpha = 245;
+    if (isDead()) { alpha = 75; }
+    fill(fillcolor.x, fillcolor.y, fillcolor.z, alpha);
     arc(0, 0, size, size, radians(15), TWO_PI - radians(15), PIE);
     popStyle();
     popMatrix();
