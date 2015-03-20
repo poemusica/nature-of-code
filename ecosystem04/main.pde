@@ -1,17 +1,36 @@
 import java.util.Iterator;
-HopperSystem hsys;
+import java.util.Random;
+
+Mouse mouse;
+Random generator;
+ArrayList<Mover> movers;
 
 void setup(){
   size(640, 360);
   background(255);
-  hsys = new HopperSystem(new PVector(width/2, height/2));
+  generator = new Random();
+  mouse = new Mouse(new PVector(mouseX, mouseY));
+  movers = new ArrayList<Mover>();
+  for (int i=0; i < 10; i++) {
+    movers.add(new Mover(new PVector(random(0, width), random(0, height))));
+  }
 }
 
 void draw(){
   background(255);
-  hsys.run();
-}
-
-void mouseClicked() {
-  hsys.addCreature(new PVector(mouseX, mouseY));
+  
+  mouse.update();
+  
+  for (Mover m : movers) {
+    for (Mover n : movers) {
+      if (m != n) { 
+        m.applyForce(n.attract(m));
+        m.applyForce(n.repel(m));
+      }
+    }
+    m.applyForce(mouse.repel(m));
+    m.run();
+  }
+  
+  mouse.display();
 }

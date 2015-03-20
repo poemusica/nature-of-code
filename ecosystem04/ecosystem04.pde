@@ -6,3 +6,16 @@
 // C. What rules can you incorporate to control how creatures are born?
 // D. Consider using a particle system itself in the design of a creature.
 //    What happens if your emitter is tied to the creature’s location?)
+
+// Food
+//  Placed randomly every ?? frames.
+// Prey
+//  Food attracts. Predators repel. Gain health from colliding with food.
+// Predators
+//  Prey attracts. Other predators repel. Gain health from colliding with prey.
+// Health
+//  Decreases every ?? frames. If health is 0, the creature is dead.
+// Eggs
+//  Eggs are a type of food. Each creature lays eggs and can eat any eggs except its own kind.
+//  If eggs are not eaten after ?? frames, the egg is replaced by a new creature of the appropriate kind.
+

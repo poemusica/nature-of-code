@@ -1,30 +1,54 @@
 class Mover{
-  PVector loc, vel, acc;
+  PVector loc, vel, acc, fillcolor;
   float topspeed;
-  float mass, size, fillcolor, lifespan, fadeRate;
+  float mass, size;
   
   Mover(PVector _loc){
     loc = _loc.get();
-    vel = new PVector(0, 0); //PVector.random2D();
+    vel = new PVector(0, 0);
     acc = new PVector(0, 0);
     topspeed = 5;
     
-    mass =1;
-    size = 50;
-    lifespan = 255;
-    fadeRate = 4;
-    fillcolor = 175;
-    
-  }
-  
-  boolean isDead() {
-    if (lifespan <= 0) { return true; }
-    return false;
+    mass = 1;
+    size = (int) generator.nextGaussian() * 2 + 50;
+    float b = (int) generator.nextGaussian() * 50 + 205;
+    fillcolor = new PVector(45, 45, b);
   }
   
   void run() {
+    applyForce(wander());
     update();
     display();
+    wrap();
+  }
+  
+  PVector wander() {
+    PVector f = PVector.random2D();
+    return PVector.lerp(f, acc, 0.6);
+  }
+  
+  PVector attract(Mover m) {
+    PVector f = PVector.sub(loc, m.loc);
+    float dist = f.mag();
+    dist = constrain(dist, 10, width/3);
+    f.setMag(50/sq(dist));
+    return f;
+  }
+  
+  PVector repel(Mover m) {
+    PVector f = PVector.sub(m.loc, loc);
+    float dist = f.mag();
+    dist = constrain(dist, 10, width/3);
+    f.setMag(25/sq(dist)); // repel strength = 25
+    return f;
+  }
+  
+  PVector toMouse() {
+    PVector f = PVector.sub(new PVector(mouseX, mouseY), loc);
+    float dist = f.mag();
+    dist = constrain(dist, 10, width/3);
+    f.setMag(100/sq(dist)); // attract strength = 100
+    return f;
   }
   
   void applyForce(PVector force) {
@@ -35,39 +59,23 @@ class Mover{
   
   void update() {
     vel.add(acc);
+    vel.limit(topspeed);
     loc.add(vel);
     acc.mult(0);
   }
   
   void display(){
-    fill(fillcolor);
-    ellipse(loc.x, loc.y, size, size);
+    pushMatrix();
+    pushStyle();
+    translate(loc.x, loc.y);
+    rotate(vel.heading());
+    noStroke();
+    fill(fillcolor.x, fillcolor.y, fillcolor.z, 210);
+    arc(0, 0, size, size, radians(15), TWO_PI - radians(15), PIE);
+    popStyle();
+    popMatrix();
   }
-  
-  void checkEdges(){
-    if (loc.x > width - size/2){
-      loc.x = width - size/2;
-    }
-    if (loc.x < 0 + size/2){
-      loc.x = 0 + size/2;
-    }
-    if (loc.y > height - size/2){
-      loc.y = height - size/2;
-    }
-    if (loc.y < 0 + size/2){
-      loc.y = 0 + size/2;
-    }
-  }
-  
-  void bounce(){
-    if ((loc.x == width) || (loc.x == 0)){
-      vel.x = vel.x * -1;
-    }
-    if ((loc.y == height) || (loc.y == 0)){
-      vel.y = vel.y * -1;
-    }
-  }
-  
+   
   void wrap(){
     if (loc.x > width + size/2){
       loc.x = 0;
