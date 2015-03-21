@@ -1,11 +1,13 @@
 // eventually refactor some functionality into Creature class
 class Mover{
+  Mover parent;
   PVector loc, vel, acc, fillcolor;
   float topspeed;
-  float mass, size;
+  float mass, size, alpha;
   float health;
   
   Mover(PVector _loc){
+    parent = this;
     loc = _loc.get();
     vel = new PVector(0, 0);
     acc = new PVector(0, 0);
@@ -17,6 +19,7 @@ class Mover{
     
     float b = (int) generator.nextGaussian() * 50 + 205;
     fillcolor = new PVector(0, 0, b);
+    alpha = 245;
   }
   
   void run() {
@@ -29,13 +32,29 @@ class Mover{
     return false;
   }
   
+  boolean laidEgg() {
+    float r = random(1);
+    if (r > 0.99) { return true; }
+    return false;
+  }
+  
+  void eat(Mover m) {
+    m.health = 0;
+    fillcolor.x += 30;
+    fillcolor.x = constrain(fillcolor.x, 0, 255);
+    size += 10;
+    size = constrain(size, 1, 150);
+    health += m.size;
+  }
+  
   void hunt(Mover m) {
     PVector v = PVector.sub(m.loc, loc);
-    if (v.mag() < m.size/2 && abs(v.heading() - vel.heading()) <= radians(10) && size >= m.size) {
-      m.health = 0;
-      fillcolor.x += 30;
-      fillcolor.x = constrain(fillcolor.x, 0, 255);
-      size += 10;
+    if (v.mag() <= m.size/2 && size >= m.size) {
+      if (m.parent != this) { // don't eat your own eggs
+        eat(m);
+      } else if (abs(v.heading() - vel.heading()) <= radians(10)) { // to eat a creature, you must be facing it
+        eat(m);
+      }
     }
   }
   
@@ -77,14 +96,18 @@ class Mover{
   }
   
   void update() {
-    applyForce(wander());
+//    applyForce(wander());
+    
+    float speed = map(health, 0, 400, 0, topspeed);
     
     vel.add(acc);
-    vel.limit(topspeed);
+    vel.limit(constrain(speed, -topspeed, topspeed));
     loc.add(vel);
     acc.mult(0);
     
     wrap();
+    
+    health -= 1;
   }
   
   void display(){
@@ -93,8 +116,6 @@ class Mover{
     translate(loc.x, loc.y);
     rotate(vel.heading());
     noStroke();
-    float alpha = 245;
-    if (isDead()) { alpha = 75; }
     fill(fillcolor.x, fillcolor.y, fillcolor.z, alpha);
     arc(0, 0, size, size, radians(15), TWO_PI - radians(15), PIE);
     popStyle();
