@@ -17,22 +17,22 @@ class Egg extends Mover {
     return false;
   }
   
-  boolean laidEgg() {
+  boolean laidEgg() { // eggs don't lay eggs
     return false;
   }
   
-  void hunt(Mover m) {
+  void hunt(Mover m) { // eggs don't hunt
   }
   
   PVector attract(Mover m) {
-    if (parent == m) {
+    if (parent == m) { // don't attract parent
       return new PVector(0, 0);
     }
     else return super.attract(m);
   }
   
   void update() {
-    timer -= 1;
+    timer -= 1; // counting down to hatch time!
   }
   
   void display() {
@@ -40,8 +40,9 @@ class Egg extends Mover {
       pushMatrix();
       translate(loc.x, loc.y);
       noStroke();
-      fill(fillcolor.x, fillcolor.y, fillcolor.z, 245);
-      ellipse(0, 0, size/5, size/5);
+      fill(id.x, id.y, id.z, 245);
+//      fill(fillcolor.x, fillcolor.y, fillcolor.z, 245);
+      ellipse(0, 0, size, size);
       popMatrix();
     }
   }

@@ -1,13 +1,14 @@
 // eventually refactor some functionality into Creature class
 class Mover{
   Mover parent;
+  PVector id;
   PVector loc, vel, acc, fillcolor;
   float topspeed;
   float mass, size, alpha;
-  float health;
+  float health, age;
   
   Mover(PVector _loc){
-    parent = this;
+    parent = this; 
     loc = _loc.get();
     vel = new PVector(0, 0);
     acc = new PVector(0, 0);
@@ -16,6 +17,7 @@ class Mover{
     mass = 1;
     size = (int) generator.nextGaussian() * 2 + 50;
     health = 400;
+    age = 0;
     
     float b = (int) generator.nextGaussian() * 50 + 205;
     fillcolor = new PVector(0, 0, b);
@@ -34,7 +36,7 @@ class Mover{
   
   boolean laidEgg() {
     float r = random(1);
-    if (r > 0.99) { return true; }
+    if (age > 2 && r > 0.99) { return true; } // 1% chance to lay an egg after aging 2mo
     return false;
   }
   
@@ -42,14 +44,14 @@ class Mover{
     m.health = 0;
     fillcolor.x += 30;
     fillcolor.x = constrain(fillcolor.x, 0, 255);
-    size += 10;
-    size = constrain(size, 1, 150);
-    health += m.size;
+    size += 10; // grow bigger as you eat
+    size = constrain(size, 25, 150);
+    health += m.size; // bigger food is more nutritious
   }
   
   void hunt(Mover m) {
     PVector v = PVector.sub(m.loc, loc);
-    if (v.mag() <= m.size/2 && size >= m.size) {
+    if (v.mag() <= m.size/2 && size >= m.size) { // only eat smaller things
       if (m.parent != this) { // don't eat your own eggs
         eat(m);
       } else if (abs(v.heading() - vel.heading()) <= radians(10)) { // to eat a creature, you must be facing it
@@ -58,12 +60,12 @@ class Mover{
     }
   }
   
-  PVector wander() {
+  PVector wander() { // makes movement jittery :(
     PVector f = PVector.random2D();
     return PVector.lerp(f, acc, 0.6);
   }
   
-  PVector attract(Mover m) {
+  PVector attract(Mover m) { 
     if (size > m.size) { return new PVector(0, 0); } // don't attract smaller movers. attract larger ones.
     PVector f = PVector.sub(loc, m.loc);
     float dist = f.mag();
@@ -98,7 +100,7 @@ class Mover{
   void update() {
 //    applyForce(wander());
     
-    float speed = map(health, 0, 400, 0, topspeed);
+    float speed = map(health, 0, 400, 0, topspeed); // health determines max possible speed
     
     vel.add(acc);
     vel.limit(constrain(speed, -topspeed, topspeed));
@@ -107,7 +109,8 @@ class Mover{
     
     wrap();
     
-    health -= 1;
+    health -= 1; // lose health over time
+    age += 0.03; // age 1mo/sec at 30 fps
   }
   
   void display(){
@@ -116,13 +119,14 @@ class Mover{
     translate(loc.x, loc.y);
     rotate(vel.heading());
     noStroke();
-    fill(fillcolor.x, fillcolor.y, fillcolor.z, alpha);
+    fill(id.x, id.y, id.z, alpha);
+//    fill(fillcolor.x, fillcolor.y, fillcolor.z, alpha);
     arc(0, 0, size, size, radians(15), TWO_PI - radians(15), PIE);
     popStyle();
     popMatrix();
   }
    
-  void wrap(){
+  void wrap(){ 
     if (loc.x > width + size/2){
       loc.x = 0;
     }
