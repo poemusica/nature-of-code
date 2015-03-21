@@ -24,13 +24,6 @@ class Egg extends Mover {
   void hunt(Mover m) { // eggs don't hunt
   }
   
-  PVector attract(Mover m) {
-    if (parent == m) { // don't attract parent
-      return new PVector(0, 0);
-    }
-    else return super.attract(m);
-  }
-  
   void update() {
     timer -= 1; // counting down to hatch time!
   }

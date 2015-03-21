@@ -36,7 +36,7 @@ class Mover{
   
   boolean laidEgg() {
     float r = random(1);
-    if (age > 2 && r > 0.99) { return true; } // 1% chance to lay an egg after aging 2mo
+    if (age > 2 && r > 0.995) { return true; } // 1% chance to lay an egg after aging 2mo
     return false;
   }
   
@@ -51,12 +51,9 @@ class Mover{
   
   void hunt(Mover m) {
     PVector v = PVector.sub(m.loc, loc);
-    if (v.mag() <= m.size/2 && size >= m.size) { // only eat smaller things
-      if (m.parent != this) { // don't eat your own eggs
-        eat(m);
-      } else if (abs(v.heading() - vel.heading()) <= radians(10)) { // to eat a creature, you must be facing it
-        eat(m);
-      }
+    if (v.mag() <= m.size/2 && size >= m.size && !id.equals(m.id) && abs(v.heading() - vel.heading()) <= radians(90)) {
+      // if within range, only hunt smaller things, don't hunt your own kind, and face toward the food to eat.
+      eat(m);
     }
   }
   
@@ -66,7 +63,9 @@ class Mover{
   }
   
   PVector attract(Mover m) { 
-    if (size > m.size) { return new PVector(0, 0); } // don't attract smaller movers. attract larger ones.
+    if (size > m.size || id.equals(m.id)) { // only attract larger creatures. don't attract your own kind.
+      return new PVector(0, 0);
+    }
     PVector f = PVector.sub(loc, m.loc);
     float dist = f.mag();
     dist = constrain(dist, 10, width/3);
@@ -75,7 +74,7 @@ class Mover{
   }
   
   PVector repel(Mover m) {
-    if (size < m.size) { return new PVector(0, 0); } // don't repel larger movers. repel smaller ones.
+    if (size < m.size) { return new PVector(0, 0); } // only repel smaller creatures.
     PVector f = PVector.sub(m.loc, loc);
     float dist = f.mag();
     dist = constrain(dist, 10, width/3);

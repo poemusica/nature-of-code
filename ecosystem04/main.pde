@@ -18,10 +18,11 @@ void setup(){
   dead = new ArrayList<Mover>();
   eggs = new ArrayList<Egg>();
   movers = new ArrayList<Mover>();
-  for (int i = 0; i < 100; i++) {
+  int initialPop = 20;
+  for (int i = 0; i < initialPop; i++) {
     movers.add(new Mover(new PVector(random(0, width), random(0, height))));
     Mover m = movers.get(i);
-    m.id = colorSpacer(i, 100);
+    m.id = colorSpacer(i, initialPop);
   }
 }
 
