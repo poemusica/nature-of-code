@@ -18,7 +18,7 @@ void setup(){
   dead = new ArrayList<Mover>();
   eggs = new ArrayList<Egg>();
   movers = new ArrayList<Mover>();
-  int initialPop = 20;
+  int initialPop = 100;
   for (int i = 0; i < initialPop; i++) {
     movers.add(new Mover(new PVector(random(0, width), random(0, height))));
     Mover m = movers.get(i);
@@ -29,12 +29,12 @@ void setup(){
 void draw(){
   background(255);
   
-  Iterator<Mover> deadIter = dead.iterator();
+  Iterator<Mover> deadIter = dead.iterator(); // display all the dead
   while (deadIter.hasNext()) {
     Mover d = deadIter.next();
     if (d.alpha <= 0) { deadIter.remove(); continue;}
     d.display();
-    d.alpha -= 0.5;
+    d.alpha -= 0.5; // the dead fade away
   }
   
   noStroke();
@@ -44,26 +44,35 @@ void draw(){
   ListIterator<Mover> moverIter = movers.listIterator();
   while (moverIter.hasNext()) {
     Mover m = moverIter.next();
-    if (m.isDead()) {
+    
+    if (m.isDead()) { // check if m is dead
       dead.add(m);
       moverIter.remove();
       continue;
     }
-    for (Mover n : movers) {
-      if (m != n) {
-        m.hunt(n); 
-        m.applyForce(n.attract(m));
-        m.applyForce(n.repel(m));
+    
+    for (Mover n : movers) { // determine how m interacts with others
+      if (m != n && n.parent != m) { // if m and n are not the SAME creature
+        PVector f;
+        if (m.size - n.size >= -10) { // if m is larger-ish than n
+          f = n.attract(m); // n attracts m
+          if (n.id == m.id) { f.div(2); } // creatures of the same kind are less attractive
+        } else { // otherwise, n repels m
+          f = n.repel(m);
+        }
+        m.applyForce(f);
+        m.hunt(n);
       }
     }
-    m.run();
+    m.run(); // update and display m
     
-    if (m.laidEgg()) {
+    if (m.laidEgg()) { // check if m laid an egg
       Egg e = new Egg(m.loc);
       e.parent = m;
       e.id = m.id;
       e.size = m.size/5;
-      e.size = constrain(e.size, 15, 150);
+      e.size = constrain(e.size, 20, 150);
+      e.mass = e.size;
       eggs.add(e);
       moverIter.add(e);
     }
@@ -72,12 +81,13 @@ void draw(){
   Iterator<Egg> eggIter = eggs.iterator();
   while (eggIter.hasNext()) {
     Egg e = eggIter.next();
-    if (e.hatched()) {
+    if (e.hatched()) { // check if the eggs hatched
       movers.add(new Mover(e.loc));
       Mover m = movers.get(movers.size()-1);
       m.id = e.id;
       m.size = e.size;
-      m.size = constrain(m.size, 25, 150);
+      m.size = constrain(m.size, 20, 150);
+      m.mass = m.size;
       eggIter.remove();
     }
   }
