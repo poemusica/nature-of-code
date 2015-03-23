@@ -38,8 +38,9 @@ class Mover{
   
   boolean laidEgg() {
     float r = random(1);
-    if (age > 1 && r > 0.99) { return true; } // probability of laying eggs after reaching maturity
-    return false;
+    if (size > 25 && health > 50 && r >= 0.99) { return true; } // probability of laying eggs after reaching maturity
+    else if (r >= 0.995) { return true; }
+    else { return false; }
   }
   
   void eat(Mover m) {
@@ -48,13 +49,14 @@ class Mover{
     fillcolor.x = constrain(fillcolor.x, 0, 255);
     size += 10; // grow bigger as you eat
     size = constrain(size, 25, 150);
-    health += m.size; // bigger food is more nutritious
+    if (m.id != id) { health += m.size; } // bigger food is more nutritious
+    else { health += 0; } 
   }
   
   void hunt(Mover m) {
     PVector v = PVector.sub(m.loc, loc);
     float delta = abs(v.heading() - vel.heading());
-    if (v.mag() <= size * 0.4 && (delta <= radians(90) || delta >= TWO_PI - radians(90))) {
+    if (v.mag() <= size * 0.4 && (delta <= radians(80) || delta >= TWO_PI - radians(80))) {
       // if within range and facing the food, eat.
       eat(m);
     }
@@ -77,7 +79,7 @@ class Mover{
     PVector f = PVector.sub(m.loc, loc);
     float dist = f.mag();
     dist = constrain(dist, 10, width/3);
-    f.setMag((100 * mass)/sq(dist)); // repel strength = 50
+    f.setMag((200 * mass)/sq(dist)); // repel strength = 50
     return f;
   }
   
@@ -99,6 +101,7 @@ class Mover{
 //    applyForce(wander());
     
     float speed = map(health, 0, 400, 0, topspeed); // health determines max possible speed
+    speed = speed/(size/300);
     
     vel.add(acc);
     vel.limit(constrain(speed, -topspeed, topspeed));
@@ -107,7 +110,7 @@ class Mover{
     
     wrap();
     
-    health -= 1; // lose health over time
+    health -= 1 * map(size, 20, 150, 0, 4); // lose health over time
     age += 0.03; // age 1mo/sec at 30 fps
   }
   

@@ -54,9 +54,10 @@ void draw(){
     for (Mover n : movers) { // determine how m interacts with others
       if (m != n && n.parent != m) { // if m and n are not the SAME creature
         PVector f;
-        if (m.size - n.size >= -10) { // if m is larger-ish than n
+        if (m.size >= n.size) {
+//        if (m.size - n.size >= -20) { // if m is larger-ish than n
           f = n.attract(m); // n attracts m
-          if (n.id == m.id) { f.div(2); } // creatures of the same kind are less attractive
+          if (n.id == m.id) { f.mult(0); } // creatures of the same kind are less attractive
         } else { // otherwise, n repels m
           f = n.repel(m);
         }
@@ -70,8 +71,8 @@ void draw(){
       Egg e = new Egg(m.loc);
       e.parent = m;
       e.id = m.id;
-      e.size = m.size/5;
-      e.size = constrain(e.size, 20, 150);
+      e.size = 20;//m.size/5;
+//      e.size = constrain(e.size, 20, 150/5);
       e.mass = e.size;
       eggs.add(e);
       moverIter.add(e);
