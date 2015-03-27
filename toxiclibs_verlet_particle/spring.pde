@@ -19,10 +19,15 @@ class Spring{
   
   void repo() {
     if (mousePressed) {
-      p2.lock();
-      p2.x = mouseX;
-      p2.y = mouseY;
-      p2.unlock();
+      Vec2D m = new Vec2D(mouseX, mouseY);
+      Vec2D p2pos = new Vec2D(p2.x, p2.y);
+      if (m.distanceTo(p2pos) <= 32)
+      {
+        p2.lock();
+        p2.x = m.x;
+        p2.y = m.y;
+        p2.unlock();
+      }
     }
   }
   

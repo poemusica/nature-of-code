@@ -9,6 +9,7 @@ Rain rain;
 
 Particle p1, p2;
 Spring spring;
+Pendulum pendulum;
 
 void setup() {
   size(640, 360);
@@ -19,15 +20,20 @@ void setup() {
   rain = new Rain();
 
   spring = new Spring();
+  
+  pendulum = new Pendulum();
 }
 
 void draw() {
-  background(0);
+  background(255);
 
   physics.update(); // updates the world by one tick
 
   rain.run();  
   spring.display();
+  pendulum.display();
+  
   spring.repo();
+  pendulum.repo();
 
 }
