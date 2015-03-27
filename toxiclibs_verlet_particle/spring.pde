@@ -1,14 +1,20 @@
-class Spring extends VerletSpring2D {
-    
-  Spring(Particle p1, Particle p2, float _len, float _stren) {
-
-    super(p1, p2, 80, 0.01);
-
-    p1.lock();
-    
+class Spring{
+  Particle p1, p2;
+  VerletSpring2D s;
+  
+  Spring() {
+    Vec2D v1 = new Vec2D(100, 20);
+    Vec2D v2 = new Vec2D(100, 180);
+    p1 = new Particle(v1);
+    p2 = new Particle(v2);
+    float len = 80.0;
+    float str = 0.01;
+    s = new VerletSpring2D(p1, p2, len, str);
+     
     physics.addParticle(p1);
     physics.addParticle(p2);
-    physics.addSpring(this);
+    physics.addSpring(s);
+    p1.lock();
   }
   
   void repo() {
