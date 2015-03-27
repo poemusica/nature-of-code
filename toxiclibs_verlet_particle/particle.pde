@@ -1,4 +1,4 @@
-class Particle extends VerletParticle2D{
+class Particle extends VerletParticle2D {
   
   float alpha;
   // VerletParticles use Vec2D and Vec3D vector classes 
