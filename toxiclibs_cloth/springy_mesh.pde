@@ -2,11 +2,13 @@ class SpringyMesh {
   ArrayList<Particle> points;
   ArrayList<Spring> springs;
   int spacing, horizPoints, vertPoints;
+  float springyness;
   
   SpringyMesh() {
-    spacing = 30;
-    horizPoints = 6;
-    vertPoints = 9;
+    spacing = 10;
+    horizPoints = 20;
+    vertPoints = 25;
+    springyness = 0.5;
     points = new ArrayList<Particle>();
     springs = new ArrayList<Spring>();
     
@@ -26,13 +28,13 @@ class SpringyMesh {
     for (int i = 0; i < horizPoints * vertPoints; i++) {
       if ((i + 1) % vertPoints != 0) {
         // vertical connection
-        Spring spring = new Spring(points.get(i), points.get(i+1), spacing, 0.08);
+        Spring spring = new Spring(points.get(i), points.get(i+1), spacing, springyness);
         springs.add(spring);
         physics.addSpring(spring);
       }
       // horizontal connection
       if (i < (horizPoints * vertPoints) - vertPoints) {
-        Spring spring = new Spring(points.get(i), points.get(i + vertPoints), spacing, 0.08);
+        Spring spring = new Spring(points.get(i), points.get(i + vertPoints), spacing, springyness);
         springs.add(spring);
         physics.addSpring(spring);
       }
@@ -45,7 +47,7 @@ class SpringyMesh {
       s.display();
     }
     for (Particle p : points) {
-      p.display();
+//      p.display();
     }
   }
   

@@ -11,8 +11,6 @@ class Spring extends VerletSpring2D {
   
   void display() {
     line(p1.x, p1.y, p2.x, p2.y); 
-    p1.display();
-    p2.display();
   }
   
 }
