@@ -3,15 +3,20 @@ class Cluster {
   ArrayList<Spring> springs;
   float diameter; // rest length between nodes
   float springyness;
+  PVector sCol;
   
-  Cluster (int n, float d, Vec2D center) {
+  Cluster (float n, float d, Vec2D center) {
     nodes = new ArrayList<Node>();
     springs = new ArrayList<Spring>();
     diameter = d;
-    springyness = 0.01;
+    springyness = 0.09;
+    sCol = new PVector(random(255), random(255), random(255));
     
+    // create n nodes
     for (int i = 0; i < n; i++) {
-      nodes.add(new Node (center.add(Vec2D.randomVector())));
+      Node node = new Node (center.add(Vec2D.randomVector()));
+      node.sCol = sCol;
+      nodes.add(node);
     }
     
     for (int i = 0; i < nodes.size() - 1; i++) {
@@ -20,6 +25,7 @@ class Cluster {
         Node nJ = nodes.get(j);
         Spring s = new Spring(nI, nJ, diameter, springyness);
         springs.add(s);
+        s.sCol = sCol;
         physics.addSpring(s);
       }
     }

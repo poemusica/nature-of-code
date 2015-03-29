@@ -1,8 +1,8 @@
-class Spring extends VerletSpring2D {
+class MinSpring extends VerletMinDistanceSpring2D {
   Node n1, n2;
   PVector sCol;
  
-  Spring(Node _n1, Node _n2, float len, float str) {
+  MinSpring(Node _n1, Node _n2, float len, float str) {
     super(_n1, _n2, len, str);
     sCol = new PVector(random(255), random(255), random(255));
     n1 = _n1;
