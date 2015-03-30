@@ -12,9 +12,9 @@ void setup() {
   clusters = new ArrayList<Cluster>();
   minSprings = new ArrayList<MinSpring>();
   
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 9; i++) {
     // number of nodes, diameter, center
-    Cluster c = new Cluster(random(5, 10), random(25, 100), new Vec2D(random(width), random(height)));
+    Cluster c = new Cluster(i + 2, 100, new Vec2D(random(50, width - 50), random(50, height - 50)));
     clusters.add(c);
   }
   
@@ -30,7 +30,7 @@ void setup() {
 
 void draw() {
   physics.update();
-  background(255);
+  background(0);
   for (Cluster c : clusters) {
     c.display();
   }

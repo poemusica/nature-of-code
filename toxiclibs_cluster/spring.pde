@@ -11,6 +11,7 @@ class Spring extends VerletSpring2D {
   }
   
   void display() {
+    strokeWeight(5);
     stroke(sCol.x, sCol.y, sCol.z, 110);
     line(n1.x, n1.y, n2.x, n2.y); 
   }
