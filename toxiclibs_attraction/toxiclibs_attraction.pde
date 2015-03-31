@@ -4,6 +4,7 @@ import toxi.physics2d.behaviors.*; // for Behaviors
 
 VerletPhysics2D physics;
 ArrayList<Particle> particles;
+ArrayList<Spring> springs;
 Attractor attractor;
 
 void setup() {
@@ -12,16 +13,25 @@ void setup() {
   physics.setWorldBounds(new Rect(0, 0, width, height)); // global properties of world
   physics.setDrag(0.01);
   
+  attractor = new Attractor(new Vec2D(width/2, height/2));
+  springs = new ArrayList<Spring>();
   particles = new ArrayList<Particle>();
   for (int i = 0; i < 25; i++) {
-    particles.add(new Particle(new Vec2D(random(width), random(height))));
+    Particle p = new Particle(new Vec2D(random(width), random(height)));
+    particles.add(p);
+    Spring s = new Spring(p, attractor, 10, 0.0001);
+    springs.add(s);
   }
-  attractor = new Attractor(new Vec2D(width/2, height/2));
+  
 }
 
 void draw() {
   physics.update();
   background(175);
+  
+  for (Spring s : springs) {
+    s.display();
+  }
   
   fill(255);
   attractor.display();
@@ -30,6 +40,7 @@ void draw() {
   for (Particle p : particles) {
     p.display();
   }
+
 }
 
 void mouseDragged() {
