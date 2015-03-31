@@ -9,6 +9,7 @@ class Attractor extends VerletParticle2D {
     strength = 0.05;
     physics.addParticle(this);
     physics.addBehavior(new AttractionBehavior(this, distance, strength));
+    physics.addBehavior(new AttractionBehavior(this, size * 3, -2 * strength));
     this.lock();
   }
   
