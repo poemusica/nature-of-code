@@ -3,67 +3,66 @@ class Cluster {
   
   ArrayList<Node> nodes;
   
-  ArrayList<Spring> springs;
-  ArrayList<Spring> outerSprings;
-  ArrayList<MinSpring> handleSprings;
+  ArrayList<Spring> springs; // internal cluster springs
+  ArrayList<ConstrainedSpring> outerSprings; // circumference
+  ArrayList<ConstrainedSpring> radialSprings; // spokes
 
-  PVector sCol, osCol, hsCol, fCol;
+  PVector sCol, osCol, rsCol, fCol;
   
-  Cluster (float n, float d, Vec2D _handle) {
+  Cluster (float n, float d, Vec2D _center) {
     nodes = new ArrayList<Node>();
     
     springs = new ArrayList<Spring>();
-    outerSprings = new ArrayList<Spring>();
-    handleSprings = new ArrayList<MinSpring>();
+    outerSprings = new ArrayList<ConstrainedSpring>();
+    radialSprings = new ArrayList<ConstrainedSpring>();
     
-    handle = new Node(_handle);
+    handle = new Node(_center);
     physics.addParticle(handle);
     
     sCol = new PVector(random(255), random(255), random(255));
     osCol = new PVector(random(255), random(255), random(255));
-    hsCol = new PVector(random(255), random(255), random(255));
+    rsCol = new PVector(random(255), random(255), random(255));
     fCol = new PVector(random(255), random(255), random(255));
     
-
+    // initializes nodes in a relatively stable formation
     for (float i = 0.0; i < n; i++) {
       Vec2D v = new Vec2D(100, 0);
       v.rotate(TWO_PI * (i / n));
       Node node = new Node(handle.add(v));
       nodes.add(node);
-      physics.addParticle(node);
     }
     
-    for(int i = 0; i < nodes.size() - 1; i++) {
+    // creates all spring connections
+    for(int i = 0; i < nodes.size(); i++) {
       Node current = nodes.get(i);
-      Node next = nodes.get(i+1);
+      Node next;
+      if (i == nodes.size()-1) {
+        next = nodes.get(0);
+      } else {
+        next = nodes.get(i+1);
+      }
       
-      MinSpring hs = new MinSpring(handle, current, 75, 0.05);
-      handleSprings.add(hs);
-      physics.addSpring(hs);
+      // radial springs connect nodes to center handle.
+      ConstrainedSpring rs = new ConstrainedSpring(handle, current, 75, 0.05);
+      radialSprings.add(rs);
       
-      Spring os = new Spring(current, next, 20, 0.05);
+      // outer springs connect adjacent nodes
+      ConstrainedSpring os = new ConstrainedSpring(current, next, 20, 0.35);
       outerSprings.add(os);
-      physics.addSpring(os);
       
+      // internal springs connect nodes to each other
       for (int j = i + 1; j < nodes.size(); j++) {
         Node nJ = nodes.get(j);
         Spring s = new Spring(current, nJ, 200, 0.0001);
         springs.add(s);
-        physics.addSpring(s);
       }
       
     }
-    Spring os = new Spring(nodes.get(nodes.size()-1), nodes.get(0), 20, 0.05);
-    outerSprings.add(os);
-    physics.addSpring(os);
- 
-    MinSpring hs = new MinSpring(handle, nodes.get(nodes.size()-1), 75, 0.05);
-    handleSprings.add(hs);
-    physics.addSpring(hs);
   }
   
   void display() {
     
+    // shape
     fill(fCol.x, fCol.y, fCol.z, 110);
     beginShape();
     noStroke();
@@ -77,7 +76,7 @@ class Cluster {
     
     // outer springs
     stroke(osCol.x, osCol.y, osCol.z, 110);
-    for (Spring os : outerSprings) {
+    for (ConstrainedSpring os : outerSprings) {
       os.display();
     }
     
@@ -87,11 +86,14 @@ class Cluster {
       s.display();
     }
     
-    // handle springs
-    stroke(hsCol.x, hsCol.y, hsCol.z, 110);
-    for (MinSpring hs : handleSprings) {
-      hs.display();
+    // radial springs
+    stroke(rsCol.x, rsCol.y, rsCol.z, 110);
+    for (ConstrainedSpring rs : radialSprings) {
+      rs.display();
     }
+    
+    // center handle
     handle.display();
   }
+  
 }
