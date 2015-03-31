@@ -1,7 +1,6 @@
 import toxi.physics2d.*; // for VerletParticle2D
 import toxi.geom.*; // for Vec2D
 import toxi.physics2d.behaviors.*; // for gravity
-import toxi.processing.*;
 import toxi.physics2d.constraints.*;
 
 VerletPhysics2D physics;
