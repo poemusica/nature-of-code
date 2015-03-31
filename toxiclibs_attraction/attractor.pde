@@ -1,0 +1,18 @@
+class Attractor extends VerletParticle2D {
+  
+  float size, distance, strength;
+  
+  Attractor(Vec2D pos) {
+    super(pos);
+    size = 30;
+    distance = width;
+    strength = 0.05;
+    physics.addParticle(this);
+    physics.addBehavior(new AttractionBehavior(this, distance, strength));
+    this.lock();
+  }
+  
+  void display() {
+    ellipse(x, y, size, size);
+  }
+}
