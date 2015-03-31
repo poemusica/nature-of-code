@@ -9,46 +9,38 @@ void setup() {
   size(640, 360);
   physics = new VerletPhysics2D(); // creating a toxiclibs Verlet physics world
   physics.setWorldBounds(new Rect(0, 0, width, height)); // global properties of world
+  
   clusters = new ArrayList<Cluster>();
   minSprings = new ArrayList<MinSpring>();
   
-  for (int i = 0; i < 9; i++) {
+  // create clusters
+  for (int i = 0; i < 4; i++) {
     // number of nodes, diameter, center
-    Cluster c = new Cluster(i + 2, 100, new Vec2D(random(50, width - 50), random(50, height - 50)));
+    Cluster c = new Cluster(i + 5, 100, new Vec2D(random(50, width - 50), random(50, height - 50)));
     clusters.add(c);
   }
   
+  // connect clusters to each other
   for (int i = 0; i < clusters.size() - 1; i++) {
     Cluster c = clusters.get(i);
     for (int j = i + 1; j < clusters.size(); j++) {
       Cluster d = clusters.get(j);
-      connect(c, d);
+      c.connect(d);
     }
   }
-  
 }
 
 void draw() {
   physics.update();
-  background(0);
-  for (Cluster c : clusters) {
-    c.display();
-  }
+  background(175);
+  
+  // cluster-to-cluster connectors
+  strokeWeight(1);
   for (MinSpring s : minSprings) {
     s.display();
   }
-}
-
-void connect(Cluster c, Cluster d) {
-  float minlen = 25;
-  float springyness = 0.015;
-  for (Node n : c.nodes) {
-    for (Node m : d.nodes) {
-      // node1, node1, minlen, springyness
-      MinSpring s = new MinSpring(n, m, minlen, springyness);
-      s.sCol = n.sCol;
-      minSprings.add(s);
-      physics.addSpring(s);
-    }
+  
+  for (Cluster c : clusters) {
+    c.display();
   }
 }
