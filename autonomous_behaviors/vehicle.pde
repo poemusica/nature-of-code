@@ -55,7 +55,6 @@ class Vehicle {
     vel.limit(maxSpeed);
     loc.add(vel);
     acc.mult(0);
-    
     wrap();
   }
   

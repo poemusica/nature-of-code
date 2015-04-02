@@ -10,8 +10,10 @@ void setup() {
 
 void draw() {
   background(255);
-  
-  if (PVector.sub(predator.loc, prey.loc).mag() < 100) {
+  float dist = PVector.sub(predator.loc, prey.loc).mag();
+  predator.maxForce = map(dist, 0, width, 2, 0);
+  prey.maxSpeed = map(dist, 0, width, 4, 0);
+  if ( dist <= 100) {
     prey.flee(predator.loc);
     predator.pursue(prey);  
   } else {
