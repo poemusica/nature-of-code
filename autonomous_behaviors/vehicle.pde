@@ -18,8 +18,19 @@ class Vehicle {
     col = random(0, 210);
   }
   
-  void pursue(Vehicle target) {
-    PVector projected = PVector.add(target.loc, target.vel);
+  void arrive(PVector target) {
+    PVector desired = PVector.sub(target, loc);
+    // go toward target at max speed, until you get close. then adjust speed.
+    if (desired.mag() <= 100) {
+      desired.setMag(map(desired.mag(), 0, 100, 0, maxSpeed));
+    } else { desired.setMag(maxSpeed); }
+    PVector steer = PVector.sub(desired, vel);
+    steer.limit(maxForce);
+    applyForce(steer);
+  }
+  
+  void pursue(PVector tloc, PVector tvel) {
+    PVector projected = PVector.add(tloc, tvel);
     PVector desired = PVector.sub(projected, loc);
     desired.setMag(maxSpeed);
     PVector steer = PVector.sub(desired, vel);

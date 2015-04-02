@@ -15,11 +15,11 @@ void draw() {
   prey.maxSpeed = map(dist, 0, width, 4, 0);
   if ( dist <= 100) {
     prey.flee(predator.loc);
-    predator.pursue(prey);  
+    predator.pursue(prey.loc, prey.vel);  
   } else {
     PVector cursor = new PVector(mouseX, mouseY);
-    prey.seek(cursor);
-    predator.seek(cursor); 
+    prey.arrive(cursor);
+    predator.arrive(cursor); 
   }
    
   
