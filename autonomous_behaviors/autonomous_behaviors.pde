@@ -15,26 +15,19 @@ void draw() {
   // border for avoiding window edges
   rect(50, 50, width - 100, height - 100);
   
-  prey.wander();
-//  predator.wander();
+  float dist = PVector.sub(predator.loc, prey.loc).mag();
+  predator.maxForce = map(dist, 0, width, 2, 0);
+  prey.maxSpeed = map(dist, 0, width, 4, 0);
   
-  predator.orbit(prey.loc);
-  
+  if ( dist <= 100) {
+    prey.flee(predator.loc);
+  } else {
+    prey.wander();
+    predator.orbit(prey.loc);
+  }
+   
   prey.avoidEdges();
   predator.avoidEdges();
-  
-//  float dist = PVector.sub(predator.loc, prey.loc).mag();
-//  predator.maxForce = map(dist, 0, width, 2, 0);
-//  prey.maxSpeed = map(dist, 0, width, 4, 0);
-//  if ( dist <= 100) {
-//    prey.flee(predator.loc);
-//    predator.pursue(prey.loc, prey.vel);  
-//  } else {
-//    PVector cursor = new PVector(mouseX, mouseY);
-//    prey.arrive(cursor);
-//    predator.arrive(cursor); 
-//  }
-   
   
   prey.update();
   predator.update();
