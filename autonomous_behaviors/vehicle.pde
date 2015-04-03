@@ -21,6 +21,26 @@ class Vehicle {
     
     wanderMag = 100;
     wanderR = 25;
+    wanderTheta = 0;
+  }
+  
+  void avoidEdges() {
+    float border = 50;
+    PVector desired = vel.get();
+    if (loc.x < border) {
+      desired.x = maxSpeed;  
+    } else if (loc.x > width - border) {
+      desired.x = -maxSpeed;
+    }
+    if (loc.y < border) {
+      desired.y = maxSpeed;
+    } else if (loc.y > height - border) { 
+      desired.y = -maxSpeed;
+    }
+    
+    PVector steer = PVector.sub(desired, vel);
+    steer.limit(maxForce);
+    applyForce(steer);
   }
   
   void wander() {
@@ -82,23 +102,6 @@ class Vehicle {
     vel.limit(maxSpeed);
     loc.add(vel);
     acc.mult(0);
-    wrap();
-  }
-  
-  void wrap(){ 
-    float d = 2*r;
-    if (loc.x > width + d){
-      loc.x = 0;
-    }
-    if (loc.x < -d){
-      loc.x = width;
-    }
-    if (loc.y > height + d){
-      loc.y = 0;
-    }
-    if (loc.y < -d){
-      loc.y = height;
-    } 
   }
   
   void display() {    
