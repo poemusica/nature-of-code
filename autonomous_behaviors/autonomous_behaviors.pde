@@ -3,7 +3,7 @@ Vehicle predator;
 Vehicle prey;
 
 void setup() {
-  size(640, 360);
+  size(1080, 800);
   predator = new Vehicle(new PVector(random(width), random(height)));
   prey = new Vehicle(new PVector(random(width), random(height)));
 }
@@ -16,7 +16,9 @@ void draw() {
   rect(50, 50, width - 100, height - 100);
   
   prey.wander();
-  predator.wander();
+//  predator.wander();
+  
+  predator.orbit(prey.loc);
   
   prey.avoidEdges();
   predator.avoidEdges();

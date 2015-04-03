@@ -24,6 +24,19 @@ class Vehicle {
     wanderTheta = 0;
   }
   
+  void orbit(PVector target) {
+    PVector desired = PVector.sub(target, loc);
+    if (desired.mag() < 300) {
+      desired.rotate(map(desired.mag(), 0, 300, PI, 0));
+      desired.setMag(maxSpeed);
+      PVector steer = PVector.sub(desired, vel);
+      steer.limit(maxForce);
+      applyForce(steer);
+    } else {
+      seek(target);
+    }
+  }
+  
   void avoidEdges() {
     float border = 50;
     PVector desired = vel.get();
