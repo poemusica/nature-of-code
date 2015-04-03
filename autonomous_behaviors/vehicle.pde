@@ -26,8 +26,8 @@ class Vehicle {
   
   void orbit(PVector target) {
     PVector desired = PVector.sub(target, loc);
-    if (desired.mag() < 300) {
-      desired.rotate(map(desired.mag(), 0, 300, PI, 0));
+    if (desired.mag() < 200) {
+      desired.rotate(map(desired.mag(), 0, 200, PI, 0));
       desired.setMag(maxSpeed);
       PVector steer = PVector.sub(desired, vel);
       steer.limit(maxForce);

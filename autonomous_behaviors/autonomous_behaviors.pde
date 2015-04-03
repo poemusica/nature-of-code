@@ -17,14 +17,16 @@ void draw() {
   
   float dist = PVector.sub(predator.loc, prey.loc).mag();
   predator.maxForce = map(dist, 0, width, 2, 0);
+  predator.maxSpeed = map(dist, 0, width, 6, 0);
   prey.maxSpeed = map(dist, 0, width, 4, 0);
   
-  if ( dist <= 100) {
+  if ( dist <= 300) {
     prey.flee(predator.loc);
   } else {
     prey.wander();
-    predator.orbit(prey.loc);
   }
+  
+  predator.orbit(prey.loc);
    
   prey.avoidEdges();
   predator.avoidEdges();
