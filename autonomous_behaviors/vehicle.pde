@@ -4,18 +4,34 @@ class Vehicle {
   float mass;
   float r, tside, theight, col;
   
+  float wanderMag, wanderR, wanderTheta; 
+  
   Vehicle(PVector _loc) {
     loc = _loc.get();
     vel = new PVector();
     acc = new PVector();
-    maxSpeed = 4;
-    maxForce = 2;
+    maxSpeed = 2;
+    maxForce = 1;
     mass = 1;
     
     r = 12;
     tside = 2 * (sin(radians(60)) * r);
     theight = sin(radians(60)) * tside;
     col = random(0, 210);
+    
+    wanderMag = 100;
+    wanderR = 25;
+  }
+  
+  void wander() {
+    wanderTheta += random(-PI/8, PI/8);
+    PVector desired = new PVector(wanderMag, 0);
+    desired.rotate(vel.heading());
+    PVector offset = new PVector(wanderR * cos(wanderTheta), wanderR * sin(wanderTheta));
+    desired.add(offset);
+    PVector steer = PVector.sub(desired, vel);
+    steer.limit(maxForce);
+    applyForce(steer);
   }
   
   void arrive(PVector target) {
@@ -110,6 +126,14 @@ class Vehicle {
       if (rot >= 120) { rot = 30; }
       popMatrix();
     }
+    // wander guides
+    line(0, 0, wanderMag, 0);
+    noFill();
+    pushMatrix();
+    translate(wanderMag, 0);
+    ellipse(0, 0, wanderR * 2, wanderR * 2);
+    line(0, 0, wanderR * cos(wanderTheta), wanderR * sin(wanderTheta));
+    popMatrix();
     popMatrix();
   }
 }
