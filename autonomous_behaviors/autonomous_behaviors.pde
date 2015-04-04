@@ -21,9 +21,9 @@ void draw() {
   prey.maxSpeed = map(dist, 0, width, 4, 0);
   
   if ( dist <= 300) {
-    prey.flee(predator.loc);
+//    prey.flee(predator.loc);
   } else {
-    prey.wander();
+//    prey.wander();
   }
   
   predator.orbit(prey.loc);
