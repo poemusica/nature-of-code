@@ -9,10 +9,16 @@ class FlowField {
     cols = floor(width / resolution);
     field = new PVector[rows][cols]; // 2D array
     
+    float ystep = 0;
     for (int r = 0; r < rows; r++) {
+      float xstep = 0;
       for(int c = 0; c < cols; c++) {
-        field[r][c] = PVector.random2D();
+        float theta = map(noise(xstep, ystep), 0, 1, -PI, PI);
+        field[r][c] = new PVector(1, 0);
+        field[r][c].rotate(theta);
+        xstep += 0.1;
       }
+      ystep += 0.1;
     }
   }
   
@@ -25,9 +31,12 @@ class FlowField {
         translate(resolution * c + centering, resolution * r + centering);
         rotate(field[r][c].heading());
         fill(0);
+        // cell center
         ellipse(0, 0, 2, 2);
+        // arrow body
         line(-size/2, 0, size/2, 0);
         translate(size/2, 0);
+        // arrow head
         pushMatrix();
         rotate(-PI * 5/6);
         line(0, 0, size/3, 0);
@@ -36,7 +45,6 @@ class FlowField {
         rotate(PI * 5/6);
         line(0, 0, size/3, 0);
         popMatrix();
-        
         popMatrix();
       }
     }
