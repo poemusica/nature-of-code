@@ -13,9 +13,11 @@ class FlowField {
     for (int r = 0; r < rows; r++) {
       float xstep = 0;
       for(int c = 0; c < cols; c++) {
-        float theta = map(noise(xstep, ystep), 0, 1, -PI, PI);
-        field[r][c] = new PVector(1, 0);
-        field[r][c].rotate(theta);
+        PVector v = new PVector(1, 0);
+        field[r][c] = v;
+//        float theta = map(noise(xstep, ystep), 0, 1, -PI, PI);
+//        field[r][c] = new PVector(1, 0);
+//        field[r][c].rotate(theta);
         xstep += 0.1;
       }
       ystep += 0.1;
@@ -29,7 +31,9 @@ class FlowField {
       for (int c = 0; c < cols; c++) {
         pushMatrix();
         translate(resolution * c + centering, resolution * r + centering);
-        rotate(field[r][c].heading());
+        PVector v = PVector.sub(new PVector(mouseX, mouseY), new PVector(resolution * c + centering, resolution * r + centering));
+        rotate(v.heading());
+//        rotate(field[r][c].heading());
         fill(0);
         // cell center
         ellipse(0, 0, 2, 2);
