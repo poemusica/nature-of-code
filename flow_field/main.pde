@@ -2,7 +2,7 @@ FlowField flowfield;
 Vehicle vehicle;
 
 void setup() {
-  size(654, 879);
+  size(879, 654);
   rectMode(CENTER);
   flowfield = new FlowField();
   vehicle = new Vehicle(new PVector(random(width), random(height)));
@@ -10,6 +10,7 @@ void setup() {
 
 void draw() {
   background(255);
+  flowfield.update();
   flowfield.display();
   PVector force = flowfield.lookup(vehicle.loc);
   force.setMag(vehicle.maxSpeed);
