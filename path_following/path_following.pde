@@ -4,8 +4,8 @@ class Path {
   
   Path() {
     w = 50;
-    start = new PVector(w/2, random(height - w/2));
-    end = new PVector(width - w/2, random(height - w/2));
+    start = new PVector(100, random(height - 0));
+    end = new PVector(width - 100, random(height - 0));
   }
   
   void display() {
