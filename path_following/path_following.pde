@@ -1,14 +1,15 @@
 class Path {
   PVector[] points;
   int numPts;
-  float w;
+  float w, spacing;
   
   Path() {
     w = 50;
     numPts = 10;
     points = new PVector[numPts];
-    float spacing = width/(numPts - 1);
+    spacing = width/(numPts - 1);
     for (int i = 0; i < points.length; i++) {
+//      PVector point = new PVector(spacing * i, random(height)); // doesn't handle this well yet
       PVector point = new PVector(spacing * i, map(noise(i * 0.25), 0, 1, 0, height));
       points[i] = point;
     }
@@ -20,6 +21,12 @@ class Path {
   
   PVector getLast() {
     return points[numPts - 1];
+  }
+  
+  void update() {
+    for (int i = 0; i < points.length; i++) {
+      points[i].y = map(noise(i * 0.25, frameCount/100), 0, 1, 0, height);
+    }
   }
   
   void display() {

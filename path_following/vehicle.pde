@@ -45,7 +45,7 @@ class Vehicle {
         target.add(normalPt);
         normPt = normalPt; // for debug display
         if (target.x >= b.x && b.equals(p.getLast())) { target.set(width + r, target.y); }
-//        else if (target.x >= b.x) {target = p.points[i + 2]; } // helps with steeper slopes
+        else if (target.x >= b.x) {target = p.points[i + 2]; } // helps with steeper slopes
       }
     }
     pathTarget = target; // for debug display

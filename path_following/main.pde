@@ -9,6 +9,7 @@ void setup() {
 
 void draw() {
   background(255);
+  path.update();
   path.display();
   vehicle.wrap(path); // confines vehicle to track length
   vehicle.followPath(path);
