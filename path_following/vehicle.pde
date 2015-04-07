@@ -27,20 +27,32 @@ class Vehicle {
     predict.add(loc); // set predict to vehicle's future location
     futLoc = predict.get(); // global for debug display
     
-    PVector normalPt = findNormalPt(predict, p.start, p.end);
-    float d = PVector.dist(predict, normalPt);
+    PVector target = null;
+    float smallestd = width * 10;
+    for (int i = 0; i < p.points.length - 1; i++) {
+      PVector a = p.points[i];
+      PVector b = p.points[i + 1];
+      PVector normalPt = findNormalPt(predict, a, b);
+      if (normalPt.x < a.x || normalPt.x > b.x) {
+        normalPt = b.get(); // hack
+      }
+      float d = PVector.dist(predict, normalPt);
+      if (d < smallestd) {
+        smallestd = d;
+        target = PVector.sub(b, a);
+        target.setMag(p.w/2);
+        target.add(normalPt);
+        normPt = normalPt; // for debug display
+      }
+    }
+    pathTarget = target.get(); // for debug display
     
-    predict = PVector.sub(p.end, p.start);
-    predict.setMag(p.w/2);
-    PVector target = PVector.add(normalPt, predict);
-    pathTarget = target.get(); // global for debug display
-    
-    if (d > p.w/2) { // adjust of vehicle is too far from the path
+    if (smallestd > p.w/2) { // adjust if vehicle is too far from the path
       seek(target);
       // globals for debug display
       seeking = true;
     } else { seeking = false; }
-    normPt = normalPt.get(); 
+     
   }
   
   void seek(PVector target) {
@@ -64,12 +76,12 @@ class Vehicle {
     acc.mult(0);
   }
   
-  void wrap(Path p) { // one-way
-    if (loc.x > p.end.x + r) {
-      loc.x = p.start.x - r;
-      loc.y = p.start.y + (loc.y-p.end.y);
-    }
-  }
+//  void wrap(Path p) { // one-way
+//    if (loc.x > p.end.x + r) {
+//      loc.x = p.start.x - r;
+//      loc.y = p.start.y + (loc.y-p.end.y);
+//    }
+//  }
   
   void display() {    
     stroke(col);
@@ -79,8 +91,8 @@ class Vehicle {
     rotate(vel.heading());
     // body
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
-    // path following guides
     popMatrix();
+    // path following guides
     stroke(0);
     fill(0);
     line(loc.x, loc.y, futLoc.x, futLoc.y);
