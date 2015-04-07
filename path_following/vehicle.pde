@@ -9,10 +9,10 @@ class Vehicle {
   
   Vehicle(PVector _loc) {
     loc = _loc.get();
-    vel = new PVector(3, 0);
+    vel = new PVector(5, 0);
     acc = new PVector();
     maxSpeed = 5;
-    maxForce = 2;
+    maxForce = 5;
     mass = 1;
     
     r = 20;
@@ -29,25 +29,28 @@ class Vehicle {
     
     PVector target = null;
     float smallestd = width * 10;
-    for (int i = 0; i < p.points.length - 1; i++) {
-      PVector a = p.points[i];
-      PVector b = p.points[i + 1];
+    PVector a;
+    PVector b;
+    for (int i = 0; i < p.numPts - 1; i++) {
+      a = p.points[i];
+      b = p.points[i + 1];
       PVector normalPt = findNormalPt(predict, a, b);
-      if (normalPt.x < a.x || normalPt.x > b.x) {
-        normalPt = b.get(); // hack
-      }
+      if (normalPt.x < a.x) { normalPt = a; }
+      if (normalPt.x > b.x) { normalPt = b; }
       float d = PVector.dist(predict, normalPt);
       if (d < smallestd) {
         smallestd = d;
-        target = PVector.sub(b, a);
+        target = PVector.sub(b, a); // determines which direction to follow the path
         target.setMag(p.w/2);
         target.add(normalPt);
         normPt = normalPt; // for debug display
+        if (target.x >= b.x && b.equals(p.getLast())) { target.set(width + r, target.y); }
+//        else if (target.x >= b.x) {target = p.points[i + 2]; } // helps with steeper slopes
       }
     }
-    pathTarget = target.get(); // for debug display
+    pathTarget = target; // for debug display
     
-    if (smallestd > p.w/2) { // adjust if vehicle is too far from the path
+    if (smallestd > p.w) { // adjust if vehicle is too far from the path
       seek(target);
       // globals for debug display
       seeking = true;
@@ -76,12 +79,12 @@ class Vehicle {
     acc.mult(0);
   }
   
-//  void wrap(Path p) { // one-way
-//    if (loc.x > p.end.x + r) {
-//      loc.x = p.start.x - r;
-//      loc.y = p.start.y + (loc.y-p.end.y);
-//    }
-//  }
+  void wrap(Path p) { // one-way
+    if (loc.x >= p.getLast().x + r) {
+      loc.x = p.getFirst().x - r;
+      loc.y = p.getFirst().y + (loc.y - p.getLast().y);
+    }
+  }
   
   void display() {    
     stroke(col);

@@ -5,13 +5,21 @@ class Path {
   
   Path() {
     w = 50;
-    numPts = 4;
+    numPts = 10;
     points = new PVector[numPts];
     float spacing = width/(numPts - 1);
     for (int i = 0; i < points.length; i++) {
-      PVector point = new PVector(spacing * i, random(height));
+      PVector point = new PVector(spacing * i, map(noise(i * 0.25), 0, 1, 0, height));
       points[i] = point;
     }
+  }
+  
+  PVector getFirst() {
+    return points[0];
+  }
+  
+  PVector getLast() {
+    return points[numPts - 1];
   }
   
   void display() {

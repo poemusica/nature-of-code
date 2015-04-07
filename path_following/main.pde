@@ -10,10 +10,10 @@ void setup() {
 void draw() {
   background(255);
   path.display();
-//  vehicle.wrap(path); // confines vehicle to track length
+  vehicle.wrap(path); // confines vehicle to track length
   vehicle.followPath(path);
   vehicle.update();
-  
+ 
   vehicle.display();
 }
 
