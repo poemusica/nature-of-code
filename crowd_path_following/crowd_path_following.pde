@@ -27,6 +27,7 @@ class Path {
   }
   
   void display() {
+    // path width
     strokeWeight(w);
     stroke(0, 100);
     noFill();
@@ -34,7 +35,7 @@ class Path {
     beginShape();
     for (PVector v : points) { vertex(v.x, v.y); }
     endShape(CLOSE);
-    
+    // exact path with points
     strokeWeight(1);
     stroke(0);
     beginShape();

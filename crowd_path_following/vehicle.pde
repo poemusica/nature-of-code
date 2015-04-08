@@ -11,7 +11,7 @@ class Vehicle {
     loc = _loc.get();
     vel = new PVector(1, 0);
     acc = new PVector();
-    maxSpeed = 5;
+    maxSpeed = 3;
     maxForce = 5;
     mass = 1;
     
@@ -32,7 +32,7 @@ class Vehicle {
   
   void followPath(Path p) {
     PVector predict = vel.get();
-    predict.setMag(25);
+    predict.setMag(r);
     predict.add(loc);
     PVector target = null;
     PVector norm = null;
@@ -51,21 +51,27 @@ class Vehicle {
         end = p.points[(i+2) % p.numPts]; // for wrap
         lookAhead = PVector.sub(end, start); // look ahead along next segment
       }
-      lookAhead.setMag(r);
+      lookAhead.setMag(p.w/2);
       float dCurrent = PVector.dist(normCurrent, predict);
       if (dCurrent < d) {
         d = dCurrent;
         norm = normCurrent;
         target = norm.get();
-        target.add(lookAhead); // should check whether lookAhead is on a segment?
+        target.add(lookAhead);
+      }  
+      float dTargEnd = PVector.dist(target, end);
+      if (dTargEnd < lookAhead.mag()) {
+       target = end.get(); // if target is not on the current segment, reset target to segment end point
       }
     }
+    fill(0); // debug
+    ellipse(norm.x, norm.y, 5, 5); // debug
     if (d > p.w/2) {
       seek(target);
-      fill(255, 0, 0);
+      fill(255, 0, 0); // debug
     }
     ellipse(target.x, target.y, 5, 5); // debug
-    
+    line(loc.x, loc.y, target.x, target.y); // debug  
   }
   
   void seek(PVector target) {
