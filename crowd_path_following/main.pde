@@ -1,16 +1,23 @@
 Path path;
-Vehicle vehicle;
+ArrayList<Vehicle> vehicles;
 
 void setup() {
   size(640, 360);
   path = new Path();
-  vehicle = new Vehicle(new PVector(0, 0));
+  vehicles = new ArrayList<Vehicle>();
+  for (int i = 0; i < 10; i++) {
+    Vehicle vehicle = new Vehicle(new PVector(random(width), random(height)));
+    vehicles.add(vehicle);
+  }
 }
 
 void draw() {
   background(255);
   path.display();
-  vehicle.followPath(path);
-  vehicle.update();
-  vehicle.display();
+  for (Vehicle vehicle : vehicles) {
+    vehicle.followPath(path);
+    vehicle.update();
+    vehicle.display();
+  }
+  path.update();
 }

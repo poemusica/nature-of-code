@@ -3,8 +3,6 @@ class Vehicle {
   float maxSpeed, maxForce;
   float mass;
   float r, col;
-  
-  PVector normPt, futLoc, pathTarget;
   boolean seeking;
   
   Vehicle(PVector _loc) {
@@ -14,10 +12,8 @@ class Vehicle {
     maxSpeed = 3;
     maxForce = 5;
     mass = 1;
-    
     r = 20;
     col = random(0, 210);
-    
     seeking = false;
   }
   
@@ -101,7 +97,6 @@ class Vehicle {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    // body
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
   }
