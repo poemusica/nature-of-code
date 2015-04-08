@@ -4,7 +4,7 @@ class Path {
   float w, spacing;
   
   Path() {
-    numPts = (int) random(2, 20);
+    numPts = (int) random(2, 25);
     w = 50;
     points = new PVector[numPts];
     spacing = width/round(numPts/2.0 + 1);
