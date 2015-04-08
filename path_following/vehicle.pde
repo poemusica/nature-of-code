@@ -4,58 +4,90 @@ class Vehicle {
   float mass;
   float r, col;
   
-  PVector normPt, futLoc, pathTarget;
-  boolean seeking;
-  
   Vehicle(PVector _loc) {
     loc = _loc.get();
     vel = new PVector(5, 0);
     acc = new PVector();
-    maxSpeed = 5;
-    maxForce = 5;
+    maxSpeed = 3;
+    maxForce = 2;
     mass = 1;
-    
     r = 20;
     col = random(0, 210);
-    
-    seeking = false;
+  }
+  
+  PVector getNormalPt(PVector point, PVector start, PVector end) {
+    // calculate the point that is perpendicular to the line along start-end
+    // and crosses through point.
+    PVector hyp = PVector.sub(point, start);
+    PVector proj = PVector.sub(end, start); // project hyp onto segment
+    proj.normalize();
+    proj.mult(hyp.dot(proj));
+    PVector normalPt = PVector.add(start, proj);
+    return normalPt;
+  }
+  
+  boolean isOnSegment(PVector point, PVector start, PVector end) {
+    // assuming 3 points on the same line, check if point is on the segment start-end.
+    if(point.x < min(start.x, end.x) || point.x > max(start.x, end.x)
+    || point.y < min(start.y, end.y) || point.y > max(start.y, end.y)) {
+      return false;
+    }
+    return true;
+  }
+  
+  PVector getLookAhead(PVector start, PVector end, float mag) {
+    PVector lookAhead = PVector.sub(end, start);
+    lookAhead.setMag(mag);
+    return lookAhead;
   }
   
   void followPath(Path p) {
     PVector predict = vel.get();
     predict.setMag(r);
-    predict.add(loc); // set predict to vehicle's future location
-    futLoc = predict.get(); // global for debug display
-    
-    PVector target = null;
-    float smallestd = width * 10;
-    PVector a;
-    PVector b;
+    predict.add(loc);
+    PVector norm = null;
+    int startIndex = p.numPts;
+    float d = width * 10;
     for (int i = 0; i < p.numPts - 1; i++) {
-      a = p.points[i];
-      b = p.points[i + 1];
-      PVector normalPt = findNormalPt(predict, a, b);
-      if (normalPt.x < a.x) { normalPt = a; }
-      if (normalPt.x > b.x) { normalPt = b; }
-      float d = PVector.dist(predict, normalPt);
-      if (d < smallestd) {
-        smallestd = d;
-        target = PVector.sub(b, a); // determines which direction to follow the path
-        target.setMag(p.w/2);
-        target.add(normalPt);
-        normPt = normalPt; // for debug display
-        if (target.x >= b.x && b.equals(p.getLast())) { target.set(width + r, target.y); }
-        else if (target.x >= b.x) {target = p.points[i + 2]; } // helps with steeper slopes
+      PVector start = p.points[i];
+      PVector end = p.points[i+1];
+      PVector normCurrent = getNormalPt(predict, start, end);
+      if (!isOnSegment(normCurrent, start, end)) {
+        normCurrent = end.get();
+      }
+      float dCurrent = PVector.dist(normCurrent, predict);
+      if (dCurrent < d) {
+        d = dCurrent;
+        norm = normCurrent;
+        startIndex = i;
       }
     }
-    pathTarget = target; // for debug display
-    
-    if (smallestd > p.w) { // adjust if vehicle is too far from the path
+    PVector segStart = p.points[startIndex];
+    PVector segEnd = p.points[startIndex + 1];
+    PVector lookAhead = getLookAhead(segStart, segEnd, r*2);
+    // make sure that target will be on a segment
+    PVector lookCheck = PVector.add(norm, lookAhead);
+    if (!segEnd.equals(p.getLast()) && !isOnSegment(lookCheck, segStart, segEnd)) {
+      segStart = segEnd;
+      segEnd = p.points[startIndex + 2];
+      lookAhead = getLookAhead(segStart, segEnd, r*2);
+    }
+    PVector target = PVector.add(norm, lookAhead);
+    if (d > p.w/4) {
       seek(target);
-      // globals for debug display
-      seeking = true;
-    } else { seeking = false; }
-     
+      fill(255, 0, 0); // debug
+    } else { fill(0); } // debug
+    
+    // debug
+    ellipse(target.x, target.y, 5, 5);
+    fill(0);
+    ellipse(norm.x, norm.y, 5, 5);
+    stroke(255, 0, 0);
+    line(loc.x, loc.y, target.x, target.y);
+    stroke(0);
+    ellipse(predict.x, predict.y, 5, 5);
+    line(loc.x, loc.y, predict.x, predict.y);
+    line(predict.x, predict.y, norm.x, norm.y);
   }
   
   void seek(PVector target) {
@@ -79,11 +111,15 @@ class Vehicle {
     acc.mult(0);
   }
   
-  void wrap(Path p) { // one-way
-    if (loc.x >= p.getLast().x + r) {
-      loc.x = p.getFirst().x - r;
-      loc.y = p.getFirst().y + (loc.y - p.getLast().y);
-    }
+  boolean lapComplete(Path p) {
+    if (loc.x >= p.getLast().x) {
+      return true;
+    } return false;
+  }
+  
+  void wrapAround(Path p) { // one-way
+      loc.x = p.getFirst().x;
+      loc.y = p.getFirst().y;
   }
   
   void display() {    
@@ -92,19 +128,7 @@ class Vehicle {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    // body
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
-    // path following guides
-    stroke(0);
-    fill(0);
-    line(loc.x, loc.y, futLoc.x, futLoc.y);
-    ellipse(futLoc.x, futLoc.y, 5, 5);
-    line(futLoc.x, futLoc.y, normPt.x, normPt.y);
-    ellipse(normPt.x, normPt.y, 5, 5);
-    if (seeking) {
-      fill(255, 0, 0);
-    }
-    ellipse(pathTarget.x, pathTarget.y, 5, 5);
   }
 }

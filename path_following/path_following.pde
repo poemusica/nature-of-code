@@ -9,8 +9,7 @@ class Path {
     points = new PVector[numPts];
     spacing = width/(numPts - 1);
     for (int i = 0; i < points.length; i++) {
-//      PVector point = new PVector(spacing * i, random(height)); // doesn't handle this well yet
-      PVector point = new PVector(spacing * i, map(noise(i * 0.25), 0, 1, 0, height));
+      PVector point = new PVector(spacing * i, random(height));
       points[i] = point;
     }
   }
@@ -24,31 +23,25 @@ class Path {
   }
   
   void update() {
-    for (int i = 0; i < points.length; i++) {
-      points[i].y = map(noise(i * 0.25, frameCount/100), 0, 1, 0, height);
+    for (int i = 0; i < numPts; i++) {
+      points[i].y = random(0, height);
     }
   }
   
   void display() {
+    // path width
     strokeWeight(w);
     stroke(0, 100);
     noFill();
     strokeCap(ROUND);
     beginShape();
-    for (PVector v : points) {
-      vertex(v.x, v.y);
-    }
+    for (PVector v : points) { vertex(v.x, v.y); }
     endShape();
-    
+    // exact path
     strokeWeight(1);
     stroke(0);
     beginShape();
-    for (PVector v : points) {
-      vertex(v.x, v.y);
-    }
+    for (PVector v : points) { vertex(v.x, v.y); ellipse(v.x, v.y, 2, 2); }
     endShape();
-    fill(0);
-    ellipse(points[0].x, points[0].y, 5, 5);
-    ellipse(points[numPts - 1].x, points[numPts - 1].y, 5, 5);
   }
 }
