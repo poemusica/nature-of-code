@@ -15,6 +15,7 @@ void draw() {
     v.separate(vehicles);
     v.cohere(vehicles);
     v.avoidEdges();
+    v.applyBehaviors(vehicles);
     v.update();
     v.display();
   }

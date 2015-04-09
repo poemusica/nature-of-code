@@ -3,55 +3,69 @@ class Vehicle {
   float maxSpeed, maxForce;
   float mass, r, col;
   float wanderMag, wanderR, wanderTheta; 
-  float sep, coh;
+  float dSep, dCoh;
+  float scaleSep, scaleCoh, scaleFlee, scaleSeek, scaleWander, scaleEdge;
   
   Vehicle(PVector _loc) {
     loc = _loc.get();
     vel = new PVector(1, 0);
     acc = new PVector(0, 0);
-    maxSpeed = 2;
+    maxSpeed = 3;
     maxForce = 1;
     mass = 1;
     
     r = 12;
     col = random(0, 210);
     
-    wanderMag = 100;
-    wanderR = 25;
     wanderTheta = 0;
     
-    sep = r * 2;
-    coh = sq(r);
+    dSep = r*2;
+    dCoh = sq(r);
+    
+    scaleSep = 0.75;
+    scaleCoh = 0.5;
+    scaleFlee = 0.5;
+    scaleSeek = 0.5;
+    scaleWander = 1.5;
+    scaleEdge = 2;
   }
   
-  void cohere(ArrayList<Vehicle> others) {
+  void applyBehaviors(ArrayList<Vehicle> others) {
+    // modify scalars
+//    scaleSep = constrain(scaleSep + map(2*sin(loc.y), -2, 2, -0.1, 0.1), 0, 2);
+//    scaleCoh = constrain(scaleCoh + map(2*cos(loc.x), -2, 2, -0.1, 0.1), 0, 2);
+//    scaleWander = constrain(scaleWander + map(2*tan(loc.x), -2, 2, -0.1, 0.1), 0, 2);
+//    println("sep:", scaleSep, "| coh:", scaleCoh,"| wand:",scaleWander);
+    // get forces
+    PVector separateForce = separate(others);
+    PVector cohereForce = cohere(others);
+    PVector fleeForce = flee(new PVector(mouseX, mouseY));
+    PVector seekForce = seek(new PVector(mouseX, mouseY));
+    PVector wanderForce = wander();
+    PVector edgeForce = avoidEdges();
+    // adjust forces
+    separateForce.mult(scaleSep);
+    cohereForce.mult(scaleCoh);
+    fleeForce.mult(scaleFlee);
+    seekForce.mult(scaleSeek);
+    wanderForce.mult(scaleWander);
+    edgeForce.mult(scaleEdge);
+    // apply forces
+    applyForce(separateForce);
+    applyForce(cohereForce);
+//    applyForce(fleeForce);
+    applyForce(seekForce);
+    applyForce(wanderForce);
+    applyForce(edgeForce);
+  }
+  
+  PVector separate(ArrayList<Vehicle> others) {
+    PVector steer = new PVector();
     PVector desiredAve = new PVector();
     int count = 0;
     for (Vehicle other : others) {
       float d = PVector.dist(loc, other.loc);
-      if (d > coh) {
-        PVector desired = PVector.sub(other.loc, loc);
-        desired.normalize();
-        desired.div(d);
-        desiredAve.add(desired);
-        count++;
-      }
-    }
-    if (count > 0) {
-      desiredAve.div(count);
-      desiredAve.setMag(maxSpeed);
-      PVector steer = PVector.sub(desiredAve, vel);
-      steer.limit(maxForce);
-      applyForce(steer);
-    }
-  }
-  
-  void separate(ArrayList<Vehicle> others) {
-    PVector desiredAve = new PVector();
-    int count = 0;
-    for (Vehicle other : others) {
-      float d = PVector.dist(loc, other.loc);
-      if (d > 0 && d < sep) {
+      if (d > 0 && d < dSep) {
         PVector desired = PVector.sub(loc, other.loc);
         desired.normalize();
         desired.div(d);
@@ -62,41 +76,63 @@ class Vehicle {
     if (count > 0) {
       desiredAve.div(count);
       desiredAve.setMag(maxSpeed);
-      PVector steer = PVector.sub(desiredAve, vel);
+      steer = PVector.sub(desiredAve, vel);
       steer.limit(maxForce);
-      applyForce(steer);
     }
+    return steer;
   }
   
-  void wander() {
-    wanderTheta += random(-PI/8, PI/8);
-    PVector desired = new PVector(wanderMag, 0);
-    desired.rotate(vel.heading());
-    PVector offset = new PVector(wanderR * cos(wanderTheta), wanderR * sin(wanderTheta));
-    desired.add(offset);
-    PVector steer = PVector.sub(desired, vel);
-    steer.limit(maxForce);
-    applyForce(steer);
+  PVector cohere(ArrayList<Vehicle> others) {
+    PVector steer = new PVector();
+    PVector desiredAve = new PVector();
+    int count = 0;
+    for (Vehicle other : others) {
+      float d = PVector.dist(loc, other.loc);
+      if (d > dCoh) {
+        PVector desired = PVector.sub(other.loc, loc);
+        desired.normalize();
+        desired.div(d);
+        desiredAve.add(desired);
+        count++;
+      }
+    }
+    if (count > 0) {
+      desiredAve.div(count);
+      desiredAve.setMag(maxSpeed);
+      steer = PVector.sub(desiredAve, vel);
+      steer.limit(maxForce);
+    }
+    return steer;
   }
   
-  // inverse of seek
-  void flee(PVector threat) {
+  PVector flee(PVector threat) {
     PVector desired = PVector.sub(loc, threat);
     desired.setMag(maxSpeed);
     PVector steer = PVector.sub(desired, vel);
     steer.limit(maxForce);
-    applyForce(steer);
+    return steer;
   }
   
-  void seek(PVector target) {
+  PVector seek(PVector target) {
     PVector desired = PVector.sub(target, loc);
     desired.setMag(maxSpeed);
     PVector steer = PVector.sub(desired, vel);
     steer.limit(maxForce);
-    applyForce(steer);
+    return steer;
   }
   
-  void avoidEdges() {
+  PVector wander() {
+    wanderTheta += random(-PI/8, PI/8);
+    PVector desired = new PVector(100, 0);
+    desired.rotate(vel.heading());
+    PVector offset = new PVector(25 * cos(wanderTheta), 25 * sin(wanderTheta));
+    desired.add(offset);
+    PVector steer = PVector.sub(desired, vel);
+    steer.limit(maxForce);
+    return steer;
+  }
+  
+  PVector avoidEdges() {
     float border = 10;
     PVector desired = vel.get();
     if (loc.x < border) {
@@ -111,7 +147,7 @@ class Vehicle {
     }
     PVector steer = PVector.sub(desired, vel);
     steer.limit(maxForce);
-    applyForce(steer);
+    return steer;
   }
   
   void applyForce(PVector force) {
@@ -133,8 +169,7 @@ class Vehicle {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    // body
-//    ellipse(0, 0, r*2, r*2);
+//    ellipse(0, 0, r, r);
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
   }
