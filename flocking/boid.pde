@@ -3,7 +3,7 @@ class Boid {
   float maxSpeed, maxForce;
   float mass, r, col;
   float wanderTheta; 
-  float dRange, dSep, dCoh, dAli;
+  float angRange, dRange, dSep, dCoh, dAli;
   float scaleSep, scaleCoh, scaleAli, scaleFlee, scaleSeek, scaleWander, scaleEdge;
   
   Boid(PVector _loc) {
@@ -19,6 +19,7 @@ class Boid {
     
     wanderTheta = 0;
     
+    angRange = radians(110);
     dRange = sq(r)/2;
     dSep = r*2;
     dCoh = dRange*0.25;
@@ -53,7 +54,7 @@ class Boid {
     applyForce(separateForce);
     applyForce(cohereForce);
     applyForce(alignForce);
-    applyForce(fleeForce);
+//    applyForce(fleeForce);
 //    applyForce(seekForce);
     applyForce(wanderForce);
 //    applyForce(edgeForce);
@@ -64,11 +65,11 @@ class Boid {
     PVector desiredAve = new PVector();
     int count = 0;
     for (Boid other : others) {
-      float d = PVector.dist(loc, other.loc);
-      if (d > 0 && d < dSep) {
-        PVector desired = PVector.sub(loc, other.loc);
-        desired.normalize();
-        desired.div(d);
+      PVector desired = PVector.sub(loc, other.loc);
+      float d = desired.mag();
+      float angDiff = abs(vel.heading() - desired.heading());
+      if (d > 0 && d < dSep && angDiff < angRange) {
+        desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
         // debug
@@ -90,9 +91,10 @@ class Boid {
     PVector desiredAve = new PVector();
     int count = 0;
     for (Boid other : others) {
-      float d = PVector.dist(loc, other.loc);
-      if (d < dRange && d > dCoh) {
-        PVector desired = PVector.sub(other.loc, loc);
+      PVector desired = PVector.sub(other.loc, loc);
+      float d = desired.mag();
+      float angDiff = abs(vel.heading() - desired.heading());
+      if (d < dRange && d > dCoh && angDiff < angRange) {
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
@@ -117,7 +119,8 @@ class Boid {
     int count = 0;
     for (Boid other : others) {
       float d = PVector.dist(other.loc, loc);
-      if (d > 0 && d < dAli) {
+      float angDiff = abs(vel.heading() - PVector.sub(other.loc, loc).heading());
+      if (d > 0 && d < dAli && angDiff < angRange) {
         desired.add(other.vel);
         count++;
         // debug
@@ -211,7 +214,10 @@ class Boid {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    stroke(0);
+    stroke(col, 75);
+    fill(col, 75);
+//    arc(0, 0, dRange, dRange, -angRange, angRange, PIE);
+    fill(col);
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
   }
