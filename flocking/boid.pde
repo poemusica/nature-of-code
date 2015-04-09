@@ -73,8 +73,8 @@ class Boid {
         desiredAve.add(desired);
         count++;
         // debug
-        stroke(255, 0, 0, 75);
-        line(loc.x, loc.y, other.loc.x, other.loc.y);
+//        stroke(255, 0, 0, 75);
+//        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -100,8 +100,8 @@ class Boid {
         desiredAve.add(desired);
         count++;
         // debug
-        stroke(0, 255, 0, 75);
-        line(loc.x, loc.y, other.loc.x, other.loc.y);
+//        stroke(0, 255, 0, 75);
+//        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -124,8 +124,8 @@ class Boid {
         desired.add(other.vel);
         count++;
         // debug
-        stroke(0, 0, 255, 75);
-        line(loc.x, loc.y, other.loc.x, other.loc.y);
+//        stroke(0, 0, 255, 75);
+//        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -224,7 +224,7 @@ class Boid {
     rotate(vel.heading());
     stroke(col, 75);
     fill(col, 75);
-//    arc(0, 0, dRange*2, dRange*2, radians(-110), radians(110), PIE);
+//    arc(0, 0, dRange*2, dRange*2, -angRange, angRange, PIE);
     fill(col);
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
