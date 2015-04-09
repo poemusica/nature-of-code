@@ -6,7 +6,7 @@ class Vehicle {
   
   Vehicle(PVector _loc) {
     loc = _loc.get();
-    vel = new PVector(5, 0);
+    vel = new PVector(3, 0);
     acc = new PVector();
     maxSpeed = 3;
     maxForce = 2;
@@ -46,8 +46,8 @@ class Vehicle {
     predict.setMag(r);
     predict.add(loc);
     PVector norm = null;
-    int startIndex = p.numPts;
-    float d = width * 10;
+    int startIndex = p.numPts; // arbitrary, out of bounds
+    float d = width * 10; // arbitrary, large
     for (int i = 0; i < p.numPts - 1; i++) {
       PVector start = p.points[i];
       PVector end = p.points[i+1];
@@ -76,8 +76,7 @@ class Vehicle {
     if (d > p.w/4) {
       seek(target);
       fill(255, 0, 0); // debug
-    } else { fill(0); } // debug
-    
+    } else { fill(0); } // debug 
     // debug
     ellipse(target.x, target.y, 5, 5);
     fill(0);

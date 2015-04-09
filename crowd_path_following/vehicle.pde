@@ -6,7 +6,7 @@ class Vehicle {
   
   Vehicle(PVector _loc) {
     loc = _loc.get();
-    vel = new PVector(1, 0);
+    vel = new PVector(3, 0);
     acc = new PVector();
     maxSpeed = 3;
     maxForce = 2;
@@ -35,47 +35,58 @@ class Vehicle {
     return true;
   }
   
+  PVector getLookAhead(PVector start, PVector end, float mag) {
+    PVector lookAhead = PVector.sub(end, start);
+    lookAhead.setMag(mag);
+    return lookAhead;
+  }
+  
   void followPath(Path p) {
     PVector predict = vel.get();
     predict.setMag(r);
     predict.add(loc);
-    PVector target = null;
     PVector norm = null;
+    int startIndex = p.numPts;
     float d = width * 10;
     for (int i = 0; i < p.numPts; i++) {
       PVector start = p.points[i];
       PVector end = p.points[(i+1) % p.numPts]; // for wrap
-      PVector lookAhead = PVector.sub(end, start); // look ahead along this segment
       PVector normCurrent = getNormalPt(predict, start, end);
-      // points could be listed N-S, S-N, E-W, W-E, etc.
-      // use min & max to check if normalPt is on the segment. 
       if(!isOnSegment(normCurrent, start, end)) {
-        normCurrent = end.get(); // nudge movement clockwise around point list
-        start = end;
-        end = p.points[(i+2) % p.numPts]; // for wrap
-        lookAhead = PVector.sub(end, start); // look ahead along next segment
+        normCurrent = end.get();
       }
-      lookAhead.setMag(p.w/2);
       float dCurrent = PVector.dist(normCurrent, predict);
       if (dCurrent < d) {
         d = dCurrent;
         norm = normCurrent;
-        target = norm.get();
-        target.add(lookAhead);
-      }  
-      float dTargEnd = PVector.dist(target, end);
-      if (dTargEnd < lookAhead.mag()) {
-       target = end.get(); // if target is not on the current segment, reset target to segment end point
+        startIndex = i;
       }
     }
-    fill(0); // debug
-    ellipse(norm.x, norm.y, 5, 5); // debug
+    PVector segStart = p.points[startIndex];
+    PVector segEnd = p.points[(startIndex + 1)% p.numPts];
+    PVector lookAhead = getLookAhead(segStart, segEnd, r*2);
+    // make sure that target will be on a segment
+    PVector lookCheck = PVector.add(norm, lookAhead);
+    if (!isOnSegment(lookCheck, segStart, segEnd)) {
+      segStart = segEnd;
+      segEnd = p.points[(startIndex + 2)% p.numPts];
+      lookAhead = getLookAhead(segStart, segEnd, r*2);
+    }
+    PVector target = PVector.add(norm, lookAhead);
     if (d > p.w/4) {
       seek(target);
       fill(255, 0, 0); // debug
-    }
-    ellipse(target.x, target.y, 5, 5); // debug
-    line(loc.x, loc.y, target.x, target.y); // debug  
+    } else { fill(0); } // debug 
+    // debug
+//    ellipse(target.x, target.y, 5, 5);
+//    fill(0);
+//    ellipse(norm.x, norm.y, 5, 5);
+//    stroke(255, 0, 0);
+//    line(loc.x, loc.y, target.x, target.y);
+//    stroke(0);
+//    ellipse(predict.x, predict.y, 5, 5);
+//    line(loc.x, loc.y, predict.x, predict.y);
+//    line(predict.x, predict.y, norm.x, norm.y);
   }
   
   void separate(ArrayList<Vehicle> others) {
@@ -83,7 +94,7 @@ class Vehicle {
     int count = 0;
     for (Vehicle other : others) {
       float d = PVector.dist(loc, other.loc);
-      if (d > 0 && d < r*2) {
+      if (d > 0 && d < r) {
         PVector desired = PVector.sub(loc, other.loc);
         desired.normalize();
         desired.div(d);
@@ -127,7 +138,7 @@ class Vehicle {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    ellipse(0, 0, r*2, r*2);
+    ellipse(0, 0, r, r);
 //    arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
   }

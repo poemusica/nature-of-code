@@ -20,5 +20,7 @@ void draw() {
     vehicle.update();
     vehicle.display();
   }
-  path.update();
+  if (frameCount % 600 == 0) {
+    path.update();
+  }
 }

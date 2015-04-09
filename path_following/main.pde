@@ -10,7 +10,6 @@ void setup() {
 void draw() {
   background(255);
   path.display();
-  
   vehicle.followPath(path);
   vehicle.update();
   vehicle.display();

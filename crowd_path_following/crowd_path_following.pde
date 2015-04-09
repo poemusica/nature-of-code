@@ -28,7 +28,8 @@ class Path {
   
   void update() {
     for (int i = 0; i < numPts; i++) {
-      float y = noise(i * 0.25, frameCount/100);
+      float y = random(0, 1);
+//      float y = noise(i, frameCount/100);
       if (i < numPts/2) {
         y = map(y, 0, 1, w, (height/2) - w);
       } else { 
