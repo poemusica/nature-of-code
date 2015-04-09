@@ -67,14 +67,14 @@ class Boid {
     for (Boid other : others) {
       PVector desired = PVector.sub(loc, other.loc);
       float d = desired.mag();
-      float angDiff = abs(vel.heading() - desired.heading());
+      float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
       if (d > 0 && d < dSep && angDiff < angRange) {
         desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
         // debug
-//        stroke(255, 0, 0, 75);
-//        line(loc.x, loc.y, other.loc.x, other.loc.y);
+        stroke(255, 0, 0, 75);
+        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -93,15 +93,15 @@ class Boid {
     for (Boid other : others) {
       PVector desired = PVector.sub(other.loc, loc);
       float d = desired.mag();
-      float angDiff = abs(vel.heading() - desired.heading());
+      float angDiff = PVector.angleBetween(vel, desired);
       if (d < dRange && d > dCoh && angDiff < angRange) {
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
         count++;
         // debug
-//        stroke(0, 255, 0, 75);
-//        line(loc.x, loc.y, other.loc.x, other.loc.y);
+        stroke(0, 255, 0, 75);
+        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -119,13 +119,13 @@ class Boid {
     int count = 0;
     for (Boid other : others) {
       float d = PVector.dist(other.loc, loc);
-      float angDiff = abs(vel.heading() - PVector.sub(other.loc, loc).heading());
+      float angDiff = PVector.angleBetween(vel, PVector.sub(other.loc, loc));
       if (d > 0 && d < dAli && angDiff < angRange) {
         desired.add(other.vel);
         count++;
         // debug
-//        stroke(0, 0, 255, 75);
-//        line(loc.x, loc.y, other.loc.x, other.loc.y);
+        stroke(0, 0, 255, 75);
+        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -140,10 +140,14 @@ class Boid {
   PVector flee(PVector threat) {
     PVector steer = new PVector();
     PVector desired = PVector.sub(loc, threat);
-    if (desired.mag() < dRange) {
+    float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
+    if (desired.mag() < dRange && angDiff < angRange) {
       desired.setMag(maxSpeed);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce);
+      // debug
+//      stroke(0, 255, 255);
+//      line(loc.x, loc.y, threat.x, threat.y);
     }
     return steer;
   }
@@ -151,10 +155,14 @@ class Boid {
   PVector seek(PVector target) {
     PVector steer = new PVector();
     PVector desired = PVector.sub(target, loc);
-    if (desired.mag() < dRange) {
+    float angDiff = PVector.angleBetween(vel, desired);
+    if (desired.mag() < dRange && angDiff < angRange) {
       desired.setMag(maxSpeed);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce);
+      // debug
+//      stroke(0, 255, 255);
+//      line(loc.x, loc.y, target.x, target.y);
     }
     return steer;
   }
@@ -216,7 +224,7 @@ class Boid {
     rotate(vel.heading());
     stroke(col, 75);
     fill(col, 75);
-//    arc(0, 0, dRange, dRange, -angRange, angRange, PIE);
+//    arc(0, 0, dRange*2, dRange*2, radians(-110), radians(110), PIE);
     fill(col);
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
