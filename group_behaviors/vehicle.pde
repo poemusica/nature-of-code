@@ -2,7 +2,7 @@ class Vehicle {
   PVector loc, vel, acc;
   float maxSpeed, maxForce;
   float mass, r, col;
-  float wanderMag, wanderR, wanderTheta; 
+  float wanderTheta; 
   float dSep, dCoh;
   float scaleSep, scaleCoh, scaleFlee, scaleSeek, scaleWander, scaleEdge;
   
