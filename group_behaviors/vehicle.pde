@@ -54,7 +54,7 @@ class Vehicle {
     applyForce(separateForce);
     applyForce(cohereForce);
 //    applyForce(fleeForce);
-    applyForce(seekForce);
+//    applyForce(seekForce);
     applyForce(wanderForce);
     applyForce(edgeForce);
   }

@@ -11,10 +11,6 @@ void setup() {
 void draw() {
   background(255);
   for (Vehicle v : vehicles) {
-    v.wander();
-    v.separate(vehicles);
-    v.cohere(vehicles);
-    v.avoidEdges();
     v.applyBehaviors(vehicles);
     v.update();
     v.display();
