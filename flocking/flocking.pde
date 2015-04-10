@@ -1,10 +1,26 @@
 class Flock {
   ArrayList<Boid> boids;
+  Data view, sep, coh, ali, flee, seek, wander, edge;
+  Data maxSpeed, maxForce;
   
   Flock() {
+    // force scalars
+    view = new Data("view", 0, 0, 2);
+    sep = new Data("separation", 0, 0, 2);
+    coh = new Data("cohesion", 0, 0, 2);
+    ali = new Data("alignment", 0, 0, 2);
+    flee = new Data("flee", 0, 0, 2);
+    seek = new Data("seek", 0, 0, 2);
+    wander = new Data("wander", 0, 0, 2);
+    edge = new Data("edge", 0.5, 0, 2);
+    
+    // movement scalars
+    maxSpeed = new Data("max speed", 3, 0, 5);
+    maxForce = new Data("max force", 0.2, 0, 5);
+    
     boids = new ArrayList<Boid>();
     for (int i = 0; i < 50; i++) {
-      boids.add(new Boid(new PVector(random(width), random(height))));
+      boids.add(new Boid(new PVector(random(width), random(height)), this));
     }
   }
   
