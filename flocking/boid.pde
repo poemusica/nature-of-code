@@ -1,7 +1,8 @@
 class Boid {
   PVector loc, vel, acc;
   float maxSpeed, maxForce;
-  float mass, r, col;
+  float mass, r;
+  PVector col, debugCol;
   float wanderTheta; 
   float angRange, dRange, dSep, dCoh, dAli;
   float scaleSep, scaleCoh, scaleAli, scaleFlee, scaleSeek, scaleWander, scaleEdge;
@@ -15,8 +16,9 @@ class Boid {
     mass = 1;
     
     r = 12;
-    col = random(0, 210);
-    
+    float c = random(0, 210); 
+    col = new PVector(c, c, c);
+    debugCol = col.get();
     wanderTheta = 0;
     
     angRange = radians(110);
@@ -32,6 +34,29 @@ class Boid {
     scaleSeek = 0.8;
     scaleWander = 0.9;
     scaleEdge = 2;
+  }
+  
+  void debug(ArrayList<Boid> others) {
+    for (Boid other : others) {
+      PVector v = PVector.sub(other.loc, loc);
+      float angDiff = PVector.angleBetween(vel, v);
+      float d = v.mag();
+      if (d > 0 && d < dRange && angDiff < angRange) { other.col.set(255, 0, 0); }
+      else { other.col.set(debugCol); }
+    }
+    pushMatrix();
+    translate(loc.x, loc.y);
+    rotate(vel.heading());
+    fill(col.x, col.y, col.z, 75);
+    arc(0, 0, dRange*2, dRange*2, -angRange, angRange, PIE);
+    popMatrix();
+  }
+  
+  void run(ArrayList<Boid> others) {
+    applyBehaviors(others);
+    update();
+    wrap();
+    display();
   }
   
   void applyBehaviors(ArrayList<Boid> others) {
@@ -216,17 +241,15 @@ class Boid {
     if (loc.y > height + r) { loc.y = -r; }
   }
   
-  void display() {    
-    stroke(col);
-    fill(col);
+  void display() {
+    pushStyle(); 
+    stroke(col.x, col.y, col.z);
+    fill(col.x, col.y, col.z);
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    stroke(col, 75);
-    fill(col, 75);
-//    arc(0, 0, dRange*2, dRange*2, -angRange, angRange, PIE);
-    fill(col);
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
+    popStyle();
   }
 }
