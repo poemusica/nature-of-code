@@ -1,42 +1,59 @@
-void (mouseDragged) {
-  //update UI using mouse coords
-}
 class UI {
-  //slider list
-  UI() {}
+  ArrayList<Data> slideData;
+  float w, h, margin, maxcols;
   
-  void addSlider() {
+  UI() {
+    slideData = new ArrayList<Data>();
+    w = 100; // width of slider
+    h = 25; // height of slider
+    margin = 10; // x and y margins
+    maxcols = floor(width/(w+margin));
   }
   
-  void isInside() {
-    // inputs: rect info, point
-    //returns a boolean
+  void addSlideData(Data data) {
+    slideData.add(data);
+  }
+  
+  boolean isInside(PVector point, PVector boundA, PVector boundB) {
+    if (point.x > max(boundA.x, boundB.x) || point.x < min(boundA.x, boundB.x)
+    || point.y > max(boundA.y, boundB.y) || point.y < min(boundA.y, boundB.y)) {
+      return false;
+    }
+    return true;
   }
   
   void update() {
-    // for each slider, calculate its rect and 
-    //check if the mouse is inside.
-    //if it is, map mouse-x to the value range. 
-    //and set the value. then update the slider. 
+    for (int i = 0; i < slideData.size(); i++) {
+      Data data = slideData.get(i);
+      float col = i % maxcols;
+      float xmargin = margin + (col*w) + (col*margin);
+      float ymargin = margin + ((margin+h) * floor(i/maxcols));
+      PVector topcorner = new PVector(xmargin, ymargin);
+      PVector botcorner = new PVector(xmargin + w, ymargin + h);
+      PVector mouse = new PVector(mouseX, mouseY);
+      if (isInside(mouse, topcorner, botcorner)) {
+        data.value = map(mouse.x, topcorner.x, botcorner.x, data.min, data.max);
+      }
+    }
   }
   
   void display() {
-    //for each slider in the sliders list, draw a rect of a certain size.
-    //draw a rect indicating the level (map its value to the size)
-    //draw its name somewhere too.
-    //if you run out of horiz space, increase y.
+    rectMode(CORNER);
+    stroke(0);
+    for (int i = 0; i < slideData.size(); i++) {
+      Data data = slideData.get(i);
+      pushMatrix();
+      float col = i % maxcols;
+      float xmargin = margin + (col*w) + (col*margin);
+      float ymargin = margin + ((margin+h) * floor(i/maxcols));
+      translate(xmargin, ymargin);
+      noFill();
+      rect(0, 0, w, h);
+      fill(0);
+      rect(0, 0, map(data.value, data.min, data.max, 0, w), h);
+      text(data.name, 2, margin + h);
+      text(data.value, w/2 + 10, margin + h);
+      popMatrix();
+    }
   }
-}
-
-class Slider {
-  //name, value, setter
-  Slider() {
-    //pass in weight object here
-    //call weight getter to get initial value
-  }
-  
-  void update() {
-    //call weight setter to match with value
-  }
-  
 }
