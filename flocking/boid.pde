@@ -1,10 +1,10 @@
 class Boid {
   Flock myFlock;
   PVector loc, vel, acc;
-  Data maxSpeed, maxForce, angRange, angView, dRange; // defined by flock
-  Data sepRange, cohRange, aliRange; // defined by flock
-  float r, mass; // r defined by flock
-  PVector col, debugCol;
+  Data maxSpeed, maxForce; // defined by flock
+  Data angRange, angView, dRange, sepRange, cohRange, aliRange; // defined by flock
+  float r, mass; // r (boid radius) defined by flock
+  PVector col, debugCol; // color
   float wanderTheta;
 
   Boid(PVector _loc, Flock _flock) {
@@ -16,12 +16,10 @@ class Boid {
     maxForce = myFlock.maxForce;
     mass = 1;
     r = myFlock.r;
-
     float c = random(0, 210); 
     col = new PVector(c, c, c);
     debugCol = col.get();
     wanderTheta = 0;
-    
     angRange = myFlock.angRange;
     angView = myFlock.angView;
     dRange = myFlock.range;
@@ -29,47 +27,7 @@ class Boid {
     cohRange = myFlock.cohRange;
     aliRange = myFlock.aliRange;
   }
-
-  void debug(ArrayList<Boid> others) {
-    for (Boid other : others) {
-      PVector v = PVector.sub(other.loc, loc);
-      float angDiff = PVector.angleBetween(vel, v);
-      float d = v.mag();
-      if (d > 0 && d < dRange.value && angDiff < angView.value) { 
-        other.col.set(255, 0, 0);
-      } else if (d > 0 && d < dRange.value && angDiff < angRange.value) { 
-        other.col.set(0, 0, 255);
-      } else if (d > 0) { 
-        other.col.set(debugCol);
-      }
-    }
-    pushMatrix();
-    translate(loc.x, loc.y);
-    rotate(vel.heading());
-    // cohesion range purple
-    fill(255, 0, 255, 45);
-    noStroke();
-    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
-    fill(255);
-    noStroke();
-    arc(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);;
-    // total range gray
-    noStroke();
-    fill(0, 0, 0, 45);
-    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
-    // view range gray
-    arc(0, 0, dRange.value*2, dRange.value*2, -angView.value, angView.value, PIE);
-    // separation range green
-    stroke(0, 255, 0);
-    fill(0, 255, 0, 45);
-    arc(0, 0, sepRange.value*r*2, sepRange.value*r*2, -angRange.value, angRange.value, PIE);
-    // alignment range yellow
-    stroke(255, 255, 0);
-    fill(255, 255, 0, 45);
-    arc(0, 0, aliRange.value*dRange.value*2, aliRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);
-    popMatrix();
-  }
-
+  
   void run(ArrayList<Boid> others) {
     applyBehaviors(others);
     update();
@@ -117,46 +75,61 @@ class Boid {
     PVector normalPt = PVector.add(start, proj);
     return normalPt;
   }
-
+  
   PVector view(ArrayList<Boid> others) {
     PVector steer = new PVector();
     PVector desiredAve = new PVector();
     int count = 0;
     for (Boid other : others) {
-      PVector v = PVector.sub(other.loc, loc);
-      float angDiff = PVector.angleBetween(vel, v);
-      float d = v.mag();
+      PVector toOther = PVector.sub(other.loc, loc); // adjacent
+      float angDiff = PVector.angleBetween(vel, toOther); // theta
+      float d = toOther.mag(); // adjacent len
       if (d > 0 && d < dRange.value && angDiff < angView.value) {
-        PVector norm = getNormalPt(other.loc, loc, PVector.add(loc, vel));
-        PVector desired = PVector.sub(norm, other.loc);
-        if (this == others.get(0)) { // debug
-          PVector test = PVector.add(loc, desired);
+        PVector desired = vel.get(); // hypotenuse
+        float scalar = d/cos(angDiff); // hypotenuse len = cos(theta)/adjacent
+        desired.setMag(scalar);
+        // debug
+        PVector test;
+        if (this == others.get(0)) {
           stroke(0);
-          line(loc.x, loc.y, norm.x, norm.y); // along vel
-          line(loc.x, loc.y, other.loc.x, other.loc.y); // hypotenuse
-          line(other.loc.x, other.loc.y, norm.x, norm.y); // normal to vel
-          line(loc.x, loc.y, test.x, test.y);
+          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
+          test = PVector.add(loc, desired);
+          line(loc.x, loc.y, test.x, test.y); // hypotenuse
+        }
+        desired.sub(toOther);
+        // debug
+        if (this == others.get(0)) {
+          test = PVector.add(other.loc, desired);
+          stroke(255, 0, 0);
+          line(other.loc.x, other.loc.y, test.x, test.y);
         }
         desiredAve.add(desired);
         count++;
       }
     }
     if (count > 0) {
-      desiredAve.div(count);
-      if (this == others.get(0)) {  // debug
-        PVector test = PVector.add(loc, desiredAve);
-        line(loc.x, loc.y, test.x, test.y);
+        desiredAve.div(count);
+        // debug
+        PVector test;
+        if (this == others.get(0)) {
+          test = desiredAve.get();
+          test.setMag(20);
+          test.add(loc);
+          stroke(0);
+          line(loc.x, loc.y, test.x, test.y);
+        }
+        desiredAve.setMag(maxSpeed.value);
+        steer = PVector.sub(desiredAve, vel);
+        // debug
+        if (this == others.get(0)) {
+          test = steer.get();
+          test.setMag(40);
+          test.add(loc);
+          stroke(255, 0, 0);
+          line(loc.x, loc.y, test.x, test.y);
+        }
+        steer.limit(maxForce.value);
       }
-      desiredAve.setMag(maxSpeed.value);
-      steer = PVector.sub(desiredAve, vel);
-      steer.limit(maxForce.value);
-      if (this == others.get(0)) {  // debug
-        PVector test = steer.get();
-        test.setMag(50);
-        test.add(loc);
-        line(loc.x, loc.y, test.x, test.y);
-      }
-    }
     return steer;
   }
 
@@ -334,6 +307,46 @@ class Boid {
     arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
     popMatrix();
     popStyle();
+  }
+  
+  void debug(ArrayList<Boid> others) {
+    for (Boid other : others) {
+      PVector v = PVector.sub(other.loc, loc);
+      float angDiff = PVector.angleBetween(vel, v);
+      float d = v.mag();
+      if (d > 0 && d < dRange.value && angDiff < angView.value) { 
+        other.col.set(255, 0, 0);
+      } else if (d > 0 && d < dRange.value && angDiff < angRange.value) { 
+        other.col.set(0, 0, 255);
+      } else if (d > 0) { 
+        other.col.set(debugCol);
+      }
+    }
+    pushMatrix();
+    translate(loc.x, loc.y);
+    rotate(vel.heading());
+    // cohesion range purple
+    fill(255, 0, 255, 45);
+    noStroke();
+    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
+    fill(255);
+    noStroke();
+    arc(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);;
+    // total range gray
+    noStroke();
+    fill(0, 0, 0, 45);
+    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
+    // view range gray
+    arc(0, 0, dRange.value*2, dRange.value*2, -angView.value, angView.value, PIE);
+    // separation range green
+    stroke(0, 255, 0);
+    fill(0, 255, 0, 45);
+    arc(0, 0, sepRange.value*r*2, sepRange.value*r*2, -angRange.value, angRange.value, PIE);
+    // alignment range yellow
+    stroke(255, 255, 0);
+    fill(255, 255, 0, 45);
+    arc(0, 0, aliRange.value*dRange.value*2, aliRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);
+    popMatrix();
   }
 }
 

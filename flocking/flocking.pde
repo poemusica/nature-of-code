@@ -31,7 +31,7 @@ class Flock {
     
     // perception angles
     angRange = new Data("perceptual range", radians(110), 0, TWO_PI);
-    angView = new Data("desired view", radians(45), 0, TWO_PI);
+    angView = new Data("view zone", radians(45), 0, TWO_PI);
     
     boids = new ArrayList<Boid>();
     for (int i = 0; i < 50; i++) {
