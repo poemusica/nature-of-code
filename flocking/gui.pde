@@ -59,7 +59,6 @@ class UI {
      float y = margin/2 + r + ((margin/2 + r*2) * i);
      PVector center = new PVector(x, y);
      if (isInsideCircle(mouse, center, r)) {
-       println("inside " + data.name);
        PVector m = PVector.sub(mouse, center);
        m.setMag(r);
        float theta = PVector.angleBetween(m, v);

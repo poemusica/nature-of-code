@@ -15,6 +15,10 @@ void setup() {
   controls.addSlideData(flock.wander);
   controls.addSlideData(flock.maxSpeed);
   controls.addSlideData(flock.maxForce);
+  controls.addSlideData(flock.range);
+  controls.addSlideData(flock.sepRange);
+  controls.addSlideData(flock.cohRange);
+  controls.addSlideData(flock.aliRange);
   controls.addPieData(flock.angRange);
   controls.addPieData(flock.angView);
 }

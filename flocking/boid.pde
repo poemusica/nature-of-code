@@ -1,11 +1,11 @@
 class Boid {
   Flock myFlock;
   PVector loc, vel, acc;
-  Data maxSpeed, maxForce, angRange, angView;
-  float mass, r;
+  Data maxSpeed, maxForce, angRange, angView, dRange; // defined by flock
+  Data sepRange, cohRange, aliRange; // defined by flock
+  float r, mass; // r defined by flock
   PVector col, debugCol;
-  float wanderTheta; 
-  float dRange, dSep, dCoh, dAli;
+  float wanderTheta;
 
   Boid(PVector _loc, Flock _flock) {
     myFlock = _flock;
@@ -15,8 +15,8 @@ class Boid {
     maxSpeed = myFlock.maxSpeed;
     maxForce = myFlock.maxForce;
     mass = 1;
+    r = myFlock.r;
 
-    r = 12;
     float c = random(0, 210); 
     col = new PVector(c, c, c);
     debugCol = col.get();
@@ -24,10 +24,10 @@ class Boid {
     
     angRange = myFlock.angRange;
     angView = myFlock.angView;
-    dRange = sq(r)/2;
-    dSep = r*2;
-    dCoh = dRange*0.25;
-    dAli = dRange*0.5;
+    dRange = myFlock.range;
+    sepRange = myFlock.sepRange;
+    cohRange = myFlock.cohRange;
+    aliRange = myFlock.aliRange;
   }
 
   void debug(ArrayList<Boid> others) {
@@ -35,9 +35,9 @@ class Boid {
       PVector v = PVector.sub(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
-      if (d > 0 && d < dRange && angDiff < angView.value) { 
+      if (d > 0 && d < dRange.value && angDiff < angView.value) { 
         other.col.set(255, 0, 0);
-      } else if (d > 0 && d < dRange && angDiff < angRange.value) { 
+      } else if (d > 0 && d < dRange.value && angDiff < angRange.value) { 
         other.col.set(0, 0, 255);
       } else if (d > 0) { 
         other.col.set(debugCol);
@@ -48,8 +48,17 @@ class Boid {
     rotate(vel.heading());
     noStroke();
     fill(0, 0, 0, 45);
-    arc(0, 0, dRange*2, dRange*2, -angRange.value, angRange.value, PIE);
-    arc(0, 0, dRange*2, dRange*2, -angView.value, angView.value, PIE);
+    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
+    arc(0, 0, dRange.value*2, dRange.value*2, -angView.value, angView.value, PIE);
+    stroke(0, 255, 0);
+    fill(0, 255, 0, 45);
+    ellipse(0, 0, sepRange.value*r*2, sepRange.value*r*2);
+    noFill();
+    stroke(0);
+    ellipse(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2);
+    stroke(255, 255, 0);
+    fill(255, 255, 0, 45);
+    ellipse(0, 0, aliRange.value*dRange.value*2, aliRange.value*dRange.value*2);
     popMatrix();
   }
 
@@ -109,7 +118,7 @@ class Boid {
       PVector v = PVector.sub(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
-      if (d > 0 && d < dRange && angDiff < angView.value) {
+      if (d > 0 && d < dRange.value && angDiff < angView.value) {
         PVector norm = getNormalPt(other.loc, loc, PVector.add(loc, vel));
         PVector desired = PVector.sub(norm, other.loc);
         if (this == others.get(0)) { // debug
@@ -151,7 +160,7 @@ class Boid {
       PVector desired = PVector.sub(loc, other.loc);
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
-      if (d > 0 && d < dSep && angDiff < angRange.value) {
+      if (d > 0 && d < sepRange.value*r && angDiff < angRange.value) {
         desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
@@ -177,7 +186,7 @@ class Boid {
       PVector desired = PVector.sub(other.loc, loc);
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, desired);
-      if (d < dRange && d > dCoh && angDiff < angRange.value) {
+      if (d < dRange.value && d > dRange.value*cohRange.value && angDiff < angRange.value) {
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
@@ -203,7 +212,7 @@ class Boid {
     for (Boid other : others) {
       float d = PVector.dist(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, PVector.sub(other.loc, loc));
-      if (d > 0 && d < dAli && angDiff < angRange.value) {
+      if (d > 0 && d < dRange.value*cohRange.value && angDiff < angRange.value) {
         desired.add(other.vel);
         count++;
         // debug
@@ -224,7 +233,7 @@ class Boid {
     PVector steer = new PVector();
     PVector desired = PVector.sub(loc, threat);
     float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
-    if (desired.mag() < dRange && angDiff < angRange.value) {
+    if (desired.mag() < dRange.value && angDiff < angRange.value) {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
@@ -239,7 +248,7 @@ class Boid {
     PVector steer = new PVector();
     PVector desired = PVector.sub(target, loc);
     float angDiff = PVector.angleBetween(vel, desired);
-    if (desired.mag() < dRange && angDiff < angRange.value) {
+    if (desired.mag() < dRange.value && angDiff < angRange.value) {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
