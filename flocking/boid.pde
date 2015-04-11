@@ -3,6 +3,7 @@ class Boid {
   PVector loc, vel, acc;
   Data maxSpeed, maxForce; // defined by flock
   Data angRange, angView, dRange, sepRange, cohRange, aliRange; // defined by flock
+  Data shape; // defined by flock
   float r, mass; // r (boid radius) defined by flock
   PVector col, debugCol; // color
   float wanderTheta;
@@ -16,6 +17,7 @@ class Boid {
     maxForce = myFlock.maxForce;
     mass = 1;
     r = myFlock.r;
+    shape = myFlock.shape; // defines boid arc
     float c = random(0, 210); 
     col = new PVector(c, c, c);
     debugCol = col.get();
@@ -304,7 +306,7 @@ class Boid {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
-    arc(0, 0, r*2, r*2, radians(150), radians(210), PIE);
+    arc(0, 0, r*2, r*2, PI-shape.value, PI+shape.value, PIE);
     popMatrix();
     popStyle();
   }

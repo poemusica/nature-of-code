@@ -21,6 +21,7 @@ void setup() {
   controls.addSlideData(flock.aliRange);
   controls.addPieData(flock.angRange);
   controls.addPieData(flock.angView);
+  controls.addPieData(flock.shape);
 }
 
 void draw() {

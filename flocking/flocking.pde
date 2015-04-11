@@ -1,13 +1,15 @@
 class Flock {
   ArrayList<Boid> boids;
   float r; // boid radius
+  Data shape; // boid arc angle
   Data view, sep, coh, ali, flee, seek, wander, edge;
   Data maxSpeed, maxForce;
   Data range, sepRange, cohRange, aliRange;
-  Data angRange, angView;
+  Data angRange, angView, foo;
   
   Flock() {
-    r = 12; // boid radius
+    r = 12;
+    shape = new Data("shape", radians(60), 0, TWO_PI);
     
     // force scalars
     view = new Data("view", 0, 0, 2);
