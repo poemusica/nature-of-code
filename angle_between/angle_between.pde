@@ -14,8 +14,8 @@ void draw() {
   m.set(mouseX, mouseY);
   m.sub(new PVector(width/2, height/2));
   m.setMag(len);
-  line(0, 0, v.x, v.y);
-  line(0, 0, m.x, m.y);
+//  line(0, 0, v.x, v.y);
+//  line(0, 0, m.x, m.y);
   float theta = PVector.angleBetween(m, v);
   if (m.y >= 0 ) { theta = TWO_PI - theta; }
   text("deg: " + degrees(theta), 0, -150);
