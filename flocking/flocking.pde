@@ -2,6 +2,7 @@ class Flock {
   ArrayList<Boid> boids;
   Data view, sep, coh, ali, flee, seek, wander, edge;
   Data maxSpeed, maxForce;
+  Data angRange, angView;
   
   Flock() {
     // force scalars
@@ -16,7 +17,11 @@ class Flock {
     
     // movement scalars
     maxSpeed = new Data("max speed", 3, 0, 5);
-    maxForce = new Data("max force", 0.2, 0, 5);
+    maxForce = new Data("max force", 0.2, 0, 2);
+    
+    // perception angles
+    angRange = new Data("perceptual range", radians(110), 0, TWO_PI);
+    angView = new Data("desired view", radians(45), 0, TWO_PI);
     
     boids = new ArrayList<Boid>();
     for (int i = 0; i < 50; i++) {

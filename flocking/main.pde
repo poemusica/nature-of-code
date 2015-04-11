@@ -3,7 +3,7 @@ Boid debugBoid;
 UI controls;
 
 void setup() {
-  size(720, 360);
+  size(1280, 640);
   flock = new Flock();
   debugBoid = flock.boids.get(0);
   debugBoid.col.set(0, 255, 0);
@@ -15,6 +15,8 @@ void setup() {
   controls.addSlideData(flock.wander);
   controls.addSlideData(flock.maxSpeed);
   controls.addSlideData(flock.maxForce);
+  controls.addPieData(flock.angRange);
+  controls.addPieData(flock.angView);
 }
 
 void draw() {

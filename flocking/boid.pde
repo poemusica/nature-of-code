@@ -1,11 +1,11 @@
 class Boid {
   Flock myFlock;
   PVector loc, vel, acc;
-  Data maxSpeed, maxForce;
+  Data maxSpeed, maxForce, angRange, angView;
   float mass, r;
   PVector col, debugCol;
   float wanderTheta; 
-  float angRange, angView, dRange, dSep, dCoh, dAli;
+  float dRange, dSep, dCoh, dAli;
 
   Boid(PVector _loc, Flock _flock) {
     myFlock = _flock;
@@ -21,9 +21,9 @@ class Boid {
     col = new PVector(c, c, c);
     debugCol = col.get();
     wanderTheta = 0;
-
-    angRange = radians(110);
-    angView = radians(45);
+    
+    angRange = myFlock.angRange;
+    angView = myFlock.angView;
     dRange = sq(r)/2;
     dSep = r*2;
     dCoh = dRange*0.25;
@@ -35,9 +35,9 @@ class Boid {
       PVector v = PVector.sub(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
-      if (d > 0 && d < dRange && angDiff < angView) { 
+      if (d > 0 && d < dRange && angDiff < angView.value) { 
         other.col.set(255, 0, 0);
-      } else if (d > 0 && d < dRange && angDiff < angRange) { 
+      } else if (d > 0 && d < dRange && angDiff < angRange.value) { 
         other.col.set(0, 0, 255);
       } else if (d > 0) { 
         other.col.set(debugCol);
@@ -46,10 +46,10 @@ class Boid {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
+    noStroke();
     fill(0, 0, 0, 45);
-    arc(0, 0, dRange*2, dRange*2, -angRange, angRange, PIE);
-    fill(0, 0, 0, 75);
-    arc(0, 0, dRange*2, dRange*2, -angView, angView, PIE);
+    arc(0, 0, dRange*2, dRange*2, -angRange.value, angRange.value, PIE);
+    arc(0, 0, dRange*2, dRange*2, -angView.value, angView.value, PIE);
     popMatrix();
   }
 
@@ -103,40 +103,42 @@ class Boid {
 
   PVector view(ArrayList<Boid> others) {
     PVector steer = new PVector();
-    PVector desiredMax = new PVector();
-    //    PVector desiredAve = new PVector();
+    PVector desiredAve = new PVector();
     int count = 0;
     for (Boid other : others) {
       PVector v = PVector.sub(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
-      float normMax = 0;
-      if (d > 0 && d < dRange && angDiff < angView) {
+      if (d > 0 && d < dRange && angDiff < angView.value) {
         PVector norm = getNormalPt(other.loc, loc, PVector.add(loc, vel));
         PVector desired = PVector.sub(norm, other.loc);
-        if (desired.mag() > normMax) { 
-          normMax = desired.mag(); 
-          desiredMax = desired.get();
+        if (this == others.get(0)) { // debug
+          PVector test = PVector.add(loc, desired);
+          stroke(0);
+          line(loc.x, loc.y, norm.x, norm.y); // along vel
+          line(loc.x, loc.y, other.loc.x, other.loc.y); // hypotenuse
+          line(other.loc.x, other.loc.y, norm.x, norm.y); // normal to vel
+          line(loc.x, loc.y, test.x, test.y);
         }
-        //        desired.normalize();
-        //        desiredAve.add(desired);
+        desiredAve.add(desired);
         count++;
-        //        PVector test = PVector.add(loc, desired);
-        //        line(loc.x, loc.y, norm.x, norm.y);
-        //        line(other.loc.x, other.loc.y, norm.x, norm.y);
-        //        line(test.x, test.y, loc.x, loc.y);
       }
     }
     if (count > 0) {
-      desiredMax.setMag(20);
-      PVector test = PVector.add(loc, desiredMax);
-      //      line(loc.x, loc.y, test.x, test.y);
-      desiredMax.setMag(maxSpeed.value);
-      //      desiredAve.div(count);
-      //      desiredAve.setMag(maxSpeed.value);
-      steer = PVector.sub(desiredMax, vel);
-      //      steer = PVector.sub(desiredAve, vel);
+      desiredAve.div(count);
+      if (this == others.get(0)) {  // debug
+        PVector test = PVector.add(loc, desiredAve);
+        line(loc.x, loc.y, test.x, test.y);
+      }
+      desiredAve.setMag(maxSpeed.value);
+      steer = PVector.sub(desiredAve, vel);
       steer.limit(maxForce.value);
+      if (this == others.get(0)) {  // debug
+        PVector test = steer.get();
+        test.setMag(50);
+        test.add(loc);
+        line(loc.x, loc.y, test.x, test.y);
+      }
     }
     return steer;
   }
@@ -149,7 +151,7 @@ class Boid {
       PVector desired = PVector.sub(loc, other.loc);
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
-      if (d > 0 && d < dSep && angDiff < angRange) {
+      if (d > 0 && d < dSep && angDiff < angRange.value) {
         desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
@@ -175,7 +177,7 @@ class Boid {
       PVector desired = PVector.sub(other.loc, loc);
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, desired);
-      if (d < dRange && d > dCoh && angDiff < angRange) {
+      if (d < dRange && d > dCoh && angDiff < angRange.value) {
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
@@ -201,7 +203,7 @@ class Boid {
     for (Boid other : others) {
       float d = PVector.dist(other.loc, loc);
       float angDiff = PVector.angleBetween(vel, PVector.sub(other.loc, loc));
-      if (d > 0 && d < dAli && angDiff < angRange) {
+      if (d > 0 && d < dAli && angDiff < angRange.value) {
         desired.add(other.vel);
         count++;
         // debug
@@ -222,7 +224,7 @@ class Boid {
     PVector steer = new PVector();
     PVector desired = PVector.sub(loc, threat);
     float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
-    if (desired.mag() < dRange && angDiff < angRange) {
+    if (desired.mag() < dRange && angDiff < angRange.value) {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
@@ -237,7 +239,7 @@ class Boid {
     PVector steer = new PVector();
     PVector desired = PVector.sub(target, loc);
     float angDiff = PVector.angleBetween(vel, desired);
-    if (desired.mag() < dRange && angDiff < angRange) {
+    if (desired.mag() < dRange && angDiff < angRange.value) {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
@@ -307,7 +309,7 @@ class Boid {
 
   void display() {
     pushStyle(); 
-    stroke(col.x, col.y, col.z);
+    noStroke();
     fill(col.x, col.y, col.z);
     pushMatrix();
     translate(loc.x, loc.y);
