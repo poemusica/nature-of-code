@@ -46,19 +46,27 @@ class Boid {
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
+    // cohesion range purple
+    fill(255, 0, 255, 45);
+    noStroke();
+    arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
+    fill(255);
+    noStroke();
+    arc(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);;
+    // total range gray
     noStroke();
     fill(0, 0, 0, 45);
     arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
+    // view range gray
     arc(0, 0, dRange.value*2, dRange.value*2, -angView.value, angView.value, PIE);
+    // separation range green
     stroke(0, 255, 0);
     fill(0, 255, 0, 45);
-    ellipse(0, 0, sepRange.value*r*2, sepRange.value*r*2);
-    noFill();
-    stroke(0);
-    ellipse(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2);
+    arc(0, 0, sepRange.value*r*2, sepRange.value*r*2, -angRange.value, angRange.value, PIE);
+    // alignment range yellow
     stroke(255, 255, 0);
     fill(255, 255, 0, 45);
-    ellipse(0, 0, aliRange.value*dRange.value*2, aliRange.value*dRange.value*2);
+    arc(0, 0, aliRange.value*dRange.value*2, aliRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);
     popMatrix();
   }
 
