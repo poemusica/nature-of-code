@@ -6,22 +6,44 @@ void setup() {
   size(1280, 640);
   flock = new Flock();
   debugBoid = flock.boids.get(0);
-  debugBoid.col = color(0, 255, 0);
+  debugBoid.c = color(0, 255, 0);
   controls = new UI();
-  controls.addSlideData(flock.view);
-  controls.addSlideData(flock.sep);
-  controls.addSlideData(flock.coh);
-  controls.addSlideData(flock.ali);
-  controls.addSlideData(flock.wander);
-  controls.addSlideData(flock.maxSpeed);
-  controls.addSlideData(flock.maxForce);
-  controls.addSlideData(flock.range);
-  controls.addSlideData(flock.sepRange);
-  controls.addSlideData(flock.cohRange);
-  controls.addSlideData(flock.aliRange);
-  controls.addPieData(flock.angRange);
-  controls.addPieData(flock.angView);
-  controls.addPieData(flock.shape);
+  color cyan = color(0, 255, 255);
+  color green = color(0, 255, 0);
+  color magenta = color(255, 0, 255);
+  color yellow = color(255, 255, 0);
+  color black = color(0, 0, 0);
+  color gray = color(210, 210, 210);
+  controls.addSlideWidget(new Widget(flock.view, controls.getSlideCoords(), cyan));
+  controls.addSlideWidget(new Widget(flock.sep, controls.getSlideCoords(), green));
+  controls.addSlideWidget(new Widget(flock.coh, controls.getSlideCoords(), magenta));
+  controls.addSlideWidget(new Widget(flock.ali, controls.getSlideCoords(), yellow));
+  controls.addSlideWidget(new Widget(flock.wander, controls.getSlideCoords(), black));
+  controls.addSlideWidget(new Widget(flock.maxSpeed, controls.getSlideCoords(), black));
+  controls.addSlideWidget(new Widget(flock.maxForce, controls.getSlideCoords(), black));
+  controls.addSlideWidget(new Widget(flock.range, controls.getSlideCoords(), gray));
+  controls.addSlideWidget(new Widget(flock.sepRange, controls.getSlideCoords(), green));
+  controls.addSlideWidget(new Widget(flock.cohRange, controls.getSlideCoords(), magenta));
+  controls.addSlideWidget(new Widget(flock.aliRange, controls.getSlideCoords(), yellow));
+  controls.addPieWidget(new Widget(flock.angRange, controls.getPieCoords(), gray));
+  controls.addPieWidget(new Widget(flock.angView, controls.getPieCoords(), cyan));
+  controls.addPieWidget(new Widget(flock.shape, controls.getPieCoords(), flock.c));
+  
+  
+//  controls.addSlideData(flock.view);
+//  controls.addSlideData(flock.sep);
+//  controls.addSlideData(flock.coh);
+//  controls.addSlideData(flock.ali);
+//  controls.addSlideData(flock.wander);
+//  controls.addSlideData(flock.maxSpeed);
+//  controls.addSlideData(flock.maxForce);
+//  controls.addSlideData(flock.range);
+//  controls.addSlideData(flock.sepRange);
+//  controls.addSlideData(flock.cohRange);
+//  controls.addSlideData(flock.aliRange);
+//  controls.addPieData(flock.angRange);
+//  controls.addPieData(flock.angView);
+//  controls.addPieData(flock.shape);
 }
 
 void draw() {

@@ -1,7 +1,7 @@
 class Flock {
   ArrayList<Boid> boids;
   float r; // boid radius
-  color col; // boid color
+  color c; // boid color
   Data shape; // boid arc angle
   Data view, sep, coh, ali, flee, seek, wander, edge;
   Data maxSpeed, maxForce;
@@ -10,39 +10,33 @@ class Flock {
   
   Flock() {
     r = 12;
-    col = color(0, 0, 0);
+    c = color(0, 0, 0);
     
-    color defaultUIcolor = color(0, 0, 0); // black
-    color green = color(0, 255, 0);
-    color purple = color(255, 0, 255);
-    color yellow = color(255, 255, 0);
-    color cyan = color(0, 255, 255);
-    color gray = color(210, 210, 210);
-    shape = new Data("shape", radians(30), 0, TWO_PI, col);
+    shape = new Data("shape", radians(30), 0, TWO_PI);
     
     // force scalars
-    view = new Data("view", 0, 0, 2, cyan); //
-    sep = new Data("separation", 0, 0, 2, green);
-    coh = new Data("cohesion", 0, 0, 2, purple);
-    ali = new Data("alignment", 0, 0, 2, yellow);
-    flee = new Data("flee", 0, 0, 2, defaultUIcolor);
-    seek = new Data("seek", 0, 0, 2, defaultUIcolor);
-    wander = new Data("wander", 0, 0, 2, defaultUIcolor);
-    edge = new Data("edge", 0.5, 0, 2, defaultUIcolor);
+    view = new Data("view", 0, 0, 2); //
+    sep = new Data("separation", 0, 0, 2);
+    coh = new Data("cohesion", 0, 0, 2);
+    ali = new Data("alignment", 0, 0, 2);
+    flee = new Data("flee", 0, 0, 2);
+    seek = new Data("seek", 0, 0, 2);
+    wander = new Data("wander", 0, 0, 2);
+    edge = new Data("edge", 0.5, 0, 2);
     
     // movement scalars
-    maxSpeed = new Data("max speed", 3, 0, 5, defaultUIcolor);
-    maxForce = new Data("max force", 0.2, 0, 2, defaultUIcolor);
+    maxSpeed = new Data("max speed", 3, 0, 5);
+    maxForce = new Data("max force", 0.2, 0, 2);
     
     // perceptual distance and scalars
-    range = new Data("range", sq(r)/2, 0, width/4, defaultUIcolor);
-    sepRange = new Data("sep. zone", 2, 0, r, green); // multiplied with r
-    cohRange = new Data("cohere zone", 0.75, 0, 1, purple); // multiplied with range
-    aliRange = new Data("align zone", 0.5, 0, 1, yellow); // multiplied with range
+    range = new Data("range", sq(r)/2, 0, width/4);
+    sepRange = new Data("sep. zone", 2, 0, r); // multiplied with r
+    cohRange = new Data("cohere zone", 0.75, 0, 1); // multiplied with range
+    aliRange = new Data("align zone", 0.5, 0, 1); // multiplied with range
     
     // perception angles
-    angRange = new Data("perceptual range", radians(110), 0, TWO_PI, gray);
-    angView = new Data("view zone", radians(45), 0, TWO_PI, cyan);
+    angRange = new Data("perceptual range", radians(110), 0, TWO_PI);
+    angView = new Data("view zone", radians(45), 0, TWO_PI);
     
     boids = new ArrayList<Boid>();
     for (int i = 0; i < 50; i++) {

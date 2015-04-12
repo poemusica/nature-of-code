@@ -5,7 +5,7 @@ class Boid {
   Data angRange, angView, dRange, sepRange, cohRange, aliRange; // defined by flock
   Data shape; // defined by flock
   float r, mass; // r (boid radius) defined by flock
-  color col, debugCol; // debug color
+  color c, debugC; // debug color
   float wanderTheta;
 
   Boid(PVector _loc, Flock _flock) {
@@ -18,8 +18,8 @@ class Boid {
     mass = 1;
     r = myFlock.r;
     shape = myFlock.shape; // defines boid arc
-    col = myFlock.col;
-    debugCol = col;
+    c = myFlock.c;
+    debugC = c;
     wanderTheta = 0;
     angRange = myFlock.angRange;
     angView = myFlock.angView;
@@ -301,7 +301,7 @@ class Boid {
   void display() {
     pushStyle(); 
     noStroke();
-    fill(col);
+    fill(c);
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
@@ -316,11 +316,11 @@ class Boid {
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
       if (d > 0 && d < dRange.value && angDiff < angView.value) { 
-        other.col = color(255, 0, 0);
+        other.c = color(255, 0, 0);
       } else if (d > 0 && d < dRange.value && angDiff < angRange.value) { 
-        other.col = color(0, 0, 255);
+        other.c = color(0, 0, 255);
       } else if (d > 0) { 
-        other.col = debugCol;
+        other.c = debugC;
       }
     }
     pushMatrix();
