@@ -33,7 +33,7 @@ class Boid {
     applyBehaviors(others);
     update();
     wrap();
-    display();
+//    display();
   }
 
   void applyBehaviors(ArrayList<Boid> others) {
@@ -65,17 +65,6 @@ class Boid {
     applyForce(wanderForce);
     //    applyForce(edgeForce);
   }
-
-  PVector getNormalPt(PVector point, PVector start, PVector end) {
-    // calculate the point that is perpendicular to the line along start-end
-    // and crosses through point.
-    PVector hyp = PVector.sub(point, start);
-    PVector proj = PVector.sub(end, start); // project hyp onto segment
-    proj.normalize();
-    proj.mult(hyp.dot(proj));
-    PVector normalPt = PVector.add(start, proj);
-    return normalPt;
-  }
   
   PVector view(ArrayList<Boid> others) {
     PVector steer = new PVector();
@@ -90,18 +79,18 @@ class Boid {
         float scalar = d/cos(angDiff); // hypotenuse len = cos(theta)/adjacent
         desired.setMag(scalar);
         // debug
-//        PVector test;
+        PVector test;
 //        if (this == others.get(0)) {
-//          stroke(0);
-//          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
-//          test = PVector.add(loc, desired);
-//          line(loc.x, loc.y, test.x, test.y); // hypotenuse
+          stroke(0, 255, 255);
+          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
+          test = PVector.add(loc, desired);
+          line(loc.x, loc.y, test.x, test.y); // hypotenuse
 //        }
         desired.sub(toOther);
         // debug
 //        if (this == others.get(0)) {
-//          test = PVector.add(other.loc, desired);
-//          stroke(255, 0, 0);
+          test = PVector.add(other.loc, desired);
+//          stroke(0, 255, 255);
 //          line(other.loc.x, other.loc.y, test.x, test.y);
 //        }
         desiredAve.add(desired);
@@ -116,7 +105,7 @@ class Boid {
 //          test = desiredAve.get();
 //          test.setMag(20);
 //          test.add(loc);
-//          stroke(0);
+//          stroke(0, 255, 255);
 //          line(loc.x, loc.y, test.x, test.y);
 //        }
         desiredAve.setMag(maxSpeed.value);
@@ -126,7 +115,7 @@ class Boid {
 //          test = steer.get();
 //          test.setMag(40);
 //          test.add(loc);
-//          stroke(255, 0, 0);
+//          stroke(0, 255, 255);
 //          line(loc.x, loc.y, test.x, test.y);
 //        }
         steer.limit(maxForce.value);
@@ -143,12 +132,12 @@ class Boid {
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
       if (d > 0 && d < sepRange.value*r && angDiff < angRange.value) {
+        // debug
+        stroke(0, 255, 0);
+        line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
-        // debug
-        //        stroke(255, 0, 0, 75);
-        //        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -169,13 +158,13 @@ class Boid {
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, desired);
       if (d < dRange.value && d > dRange.value*cohRange.value && angDiff < angRange.value) {
+        // debug
+        stroke(255, 0, 255);
+        line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
         count++;
-        // debug
-        //        stroke(0, 255, 0, 75);
-        //        line(loc.x, loc.y, other.loc.x, other.loc.y);
       }
     }
     if (count > 0) {
@@ -198,8 +187,11 @@ class Boid {
         desired.add(other.vel);
         count++;
         // debug
-        //        stroke(0, 0, 255, 75);
-        //        line(loc.x, loc.y, other.loc.x, other.loc.y);
+        PVector test = other.vel.get();
+        test.mult(50);
+        test.add(loc);
+        stroke(255, 255, 0);
+        line(loc.x, loc.y, test.x, test.y);
       }
     }
     if (count > 0) {
@@ -220,8 +212,8 @@ class Boid {
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
       // debug
-      //      stroke(0, 255, 255);
-      //      line(loc.x, loc.y, threat.x, threat.y);
+//      stroke(0);
+//      line(loc.x, loc.y, threat.x, threat.y);
     }
     return steer;
   }
@@ -235,8 +227,8 @@ class Boid {
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
       // debug
-      //      stroke(0, 255, 255);
-      //      line(loc.x, loc.y, target.x, target.y);
+//      stroke(0, 255, 255);
+//      line(loc.x, loc.y, target.x, target.y);
     }
     return steer;
   }
@@ -247,6 +239,10 @@ class Boid {
     desired.rotate(vel.heading());
     PVector offset = new PVector(25 * cos(wanderTheta), 25 * sin(wanderTheta));
     desired.add(offset);
+    // debug
+//    PVector test = PVector.add(loc, desired);
+//    stroke(0);
+//    line(loc.x, loc.y, test.x, test.y);
     PVector steer = PVector.sub(desired, vel);
     steer.limit(maxForce.value);
     return steer;

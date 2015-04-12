@@ -28,27 +28,11 @@ void setup() {
   controls.addPieWidget(new Widget(flock.angRange, controls.getPieCoords(), gray));
   controls.addPieWidget(new Widget(flock.angView, controls.getPieCoords(), cyan));
   controls.addPieWidget(new Widget(flock.shape, controls.getPieCoords(), flock.c));
-  
-  
-//  controls.addSlideData(flock.view);
-//  controls.addSlideData(flock.sep);
-//  controls.addSlideData(flock.coh);
-//  controls.addSlideData(flock.ali);
-//  controls.addSlideData(flock.wander);
-//  controls.addSlideData(flock.maxSpeed);
-//  controls.addSlideData(flock.maxForce);
-//  controls.addSlideData(flock.range);
-//  controls.addSlideData(flock.sepRange);
-//  controls.addSlideData(flock.cohRange);
-//  controls.addSlideData(flock.aliRange);
-//  controls.addPieData(flock.angRange);
-//  controls.addPieData(flock.angView);
-//  controls.addPieData(flock.shape);
 }
 
 void draw() {
-  background(255);
-  debugBoid.debug(flock.boids);
+  background(90);
+//  debugBoid.debug(flock.boids);
   flock.run();
   controls.display();
 }
