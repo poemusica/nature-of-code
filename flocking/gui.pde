@@ -108,6 +108,7 @@ class UI {
   
   void displayPies() {
     textSize(10);
+    strokeWeight(2);
     for (int i = 0; i < pieWidgets.size(); i++) {
      Widget widget = pieWidgets.get(i);
      PVector v = new PVector(r, 0);
@@ -128,6 +129,7 @@ class UI {
   
   void displaySliders() {
     rectMode(CORNER);
+    strokeWeight(2);
     stroke(0);
     textSize(10);
     for (int i = 0; i < slideWidgets.size(); i++) {

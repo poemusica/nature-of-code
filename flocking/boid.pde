@@ -81,7 +81,8 @@ class Boid {
         // debug
         PVector test;
 //        if (this == others.get(0)) {
-          stroke(0, 255, 255);
+          strokeWeight(8);
+          stroke(0, 255, 255, 45);
           line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
           test = PVector.add(loc, desired);
           line(loc.x, loc.y, test.x, test.y); // hypotenuse
@@ -89,7 +90,7 @@ class Boid {
         desired.sub(toOther);
         // debug
 //        if (this == others.get(0)) {
-          test = PVector.add(other.loc, desired);
+//          test = PVector.add(other.loc, desired);
 //          stroke(0, 255, 255);
 //          line(other.loc.x, other.loc.y, test.x, test.y);
 //        }
@@ -133,7 +134,7 @@ class Boid {
       float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
       if (d > 0 && d < sepRange.value*r && angDiff < angRange.value) {
         // debug
-        stroke(0, 255, 0);
+        stroke(0, 255, 0, 45);
         line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.setMag(1/d);
         desiredAve.add(desired);
@@ -159,7 +160,7 @@ class Boid {
       float angDiff = PVector.angleBetween(vel, desired);
       if (d < dRange.value && d > dRange.value*cohRange.value && angDiff < angRange.value) {
         // debug
-        stroke(255, 0, 255);
+        stroke(255, 0, 255, 45);
         line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.normalize();
         desired.div(d);
@@ -190,7 +191,7 @@ class Boid {
         PVector test = other.vel.get();
         test.mult(50);
         test.add(loc);
-        stroke(255, 255, 0);
+        stroke(255, 255, 0, 45);
         line(loc.x, loc.y, test.x, test.y);
       }
     }
