@@ -31,7 +31,7 @@ class Flock {
     // perceptual distance and scalars
     range = new Data("range", sq(r)/2, 0, width/4);
     sepRange = new Data("sep. zone", 2, 0, r); // multiplied with r
-    cohRange = new Data("cohere zone", 0.75, 0, 1); // multiplied with range
+    cohRange = new Data("cohere zone", 0.75, 1, 0); // multiplied with range
     aliRange = new Data("align zone", 0.5, 0, 1); // multiplied with range
     
     // perception angles
