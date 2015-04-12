@@ -33,7 +33,7 @@ class Boid {
     applyBehaviors(others);
     update();
     wrap();
-//    display();
+    display();
   }
 
   void applyBehaviors(ArrayList<Boid> others) {
@@ -78,47 +78,15 @@ class Boid {
         PVector desired = vel.get(); // hypotenuse
         float scalar = d/cos(angDiff); // hypotenuse len = cos(theta)/adjacent
         desired.setMag(scalar);
-        // debug
-        PVector test;
-//        if (this == others.get(0)) {
-          strokeWeight(8);
-          stroke(0, 255, 255, 45);
-          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
-          test = PVector.add(loc, desired);
-          line(loc.x, loc.y, test.x, test.y); // hypotenuse
-//        }
         desired.sub(toOther);
-        // debug
-//        if (this == others.get(0)) {
-//          test = PVector.add(other.loc, desired);
-//          stroke(0, 255, 255);
-//          line(other.loc.x, other.loc.y, test.x, test.y);
-//        }
         desiredAve.add(desired);
         count++;
       }
     }
     if (count > 0) {
         desiredAve.div(count);
-        // debug
-//        PVector test;
-//        if (this == others.get(0)) {
-//          test = desiredAve.get();
-//          test.setMag(20);
-//          test.add(loc);
-//          stroke(0, 255, 255);
-//          line(loc.x, loc.y, test.x, test.y);
-//        }
         desiredAve.setMag(maxSpeed.value);
         steer = PVector.sub(desiredAve, vel);
-        // debug
-//        if (this == others.get(0)) {
-//          test = steer.get();
-//          test.setMag(40);
-//          test.add(loc);
-//          stroke(0, 255, 255);
-//          line(loc.x, loc.y, test.x, test.y);
-//        }
         steer.limit(maxForce.value);
       }
     return steer;
@@ -133,9 +101,6 @@ class Boid {
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, PVector.mult(desired, -1));
       if (d > 0 && d < sepRange.value*r && angDiff < angRange.value) {
-        // debug
-        stroke(0, 255, 0, 45);
-        line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.setMag(1/d);
         desiredAve.add(desired);
         count++;
@@ -159,9 +124,6 @@ class Boid {
       float d = desired.mag();
       float angDiff = PVector.angleBetween(vel, desired);
       if (d < dRange.value && d > dRange.value*cohRange.value && angDiff < angRange.value) {
-        // debug
-        stroke(255, 0, 255, 45);
-        line(loc.x, loc.y, other.loc.x, other.loc.y); // same as desired
         desired.normalize();
         desired.div(d);
         desiredAve.add(desired);
@@ -187,12 +149,6 @@ class Boid {
       if (d > 0 && d < dRange.value*cohRange.value && angDiff < angRange.value) {
         desired.add(other.vel);
         count++;
-        // debug
-        PVector test = other.vel.get();
-        test.mult(50);
-        test.add(loc);
-        stroke(255, 255, 0, 45);
-        line(loc.x, loc.y, test.x, test.y);
       }
     }
     if (count > 0) {
@@ -212,9 +168,6 @@ class Boid {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
-      // debug
-//      stroke(0);
-//      line(loc.x, loc.y, threat.x, threat.y);
     }
     return steer;
   }
@@ -227,9 +180,6 @@ class Boid {
       desired.setMag(maxSpeed.value);
       steer = PVector.sub(desired, vel);
       steer.limit(maxForce.value);
-      // debug
-//      stroke(0, 255, 255);
-//      line(loc.x, loc.y, target.x, target.y);
     }
     return steer;
   }
@@ -240,10 +190,6 @@ class Boid {
     desired.rotate(vel.heading());
     PVector offset = new PVector(25 * cos(wanderTheta), 25 * sin(wanderTheta));
     desired.add(offset);
-    // debug
-//    PVector test = PVector.add(loc, desired);
-//    stroke(0);
-//    line(loc.x, loc.y, test.x, test.y);
     PVector steer = PVector.sub(desired, vel);
     steer.limit(maxForce.value);
     return steer;
@@ -298,6 +244,7 @@ class Boid {
   void display() {
     pushStyle(); 
     noStroke();
+    strokeWeight(2);
     fill(c);
     pushMatrix();
     translate(loc.x, loc.y);
@@ -324,6 +271,7 @@ class Boid {
     translate(loc.x, loc.y);
     rotate(vel.heading());
     // cohesion range purple
+    strokeWeight(1);
     fill(255, 0, 255, 45);
     stroke(255, 0, 255);
     arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);

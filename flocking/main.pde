@@ -31,8 +31,8 @@ void setup() {
 }
 
 void draw() {
-  background(90);
-//  debugBoid.debug(flock.boids);
+  background(150);
+  debugBoid.debug(flock.boids);
   flock.run();
   controls.display();
 }
