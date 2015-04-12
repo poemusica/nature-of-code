@@ -6,7 +6,7 @@ void setup() {
   size(1280, 640);
   flock = new Flock();
   debugBoid = flock.boids.get(0);
-  debugBoid.col.set(0, 255, 0);
+  debugBoid.col = color(0, 255, 0);
   controls = new UI();
   controls.addSlideData(flock.view);
   controls.addSlideData(flock.sep);

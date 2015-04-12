@@ -1,13 +1,15 @@
 class Data {
   String name;
   float initial, value, min, max;
+  color col; // quick hack for color-coded UI
   
-  Data(String _name, float _initial, float _min, float _max) {
+  Data(String _name, float _initial, float _min, float _max, color _col) {
     name = _name;
     initial = _initial;
     value = initial;  
     min = _min;
     max = _max;
+    col = _col;
   }
 }
 
@@ -88,24 +90,22 @@ class UI {
   void displayPies() {
     textSize(10);
     float x = xLimit + r + margin;
-    float alpha = 45;
     for (int i = 0; i < pieData.size(); i++) {
      Data data = pieData.get(i);
      float y = margin/2 + r + ((margin/2 + r*2) * i);
      PVector v = new PVector(r, 0);
      pushMatrix();
      translate(x, y);
+     fill(data.col);
+     noStroke();
+     arc(0, 0, r*2, r*2, TWO_PI - data.value*2, TWO_PI, PIE);
      stroke(0);
      noFill();
      ellipse(0, 0, r*2, r*2);
-     fill(0, 0, 0, alpha);
-     noStroke();
-     arc(0, 0, r*2, r*2, TWO_PI - data.value*2, TWO_PI, PIE);
      fill(0);
      text(data.name, r + margin/2, -r, r + margin*2 , margin*2);
      text(round(degrees(data.value*2))+" deg", r + margin/2, r*0.85);
      popMatrix();
-     alpha += 45;
    } 
   }
   
@@ -120,10 +120,13 @@ class UI {
       float xmargin = margin + (col*w) + (col*margin);
       float ymargin = margin + ((margin+h) * floor(i/maxcols));
       translate(xmargin, ymargin);
+      stroke(data.col);
+      fill(data.col);
+      rect(0, 0, map(data.value, data.min, data.max, 0, w), h);
       noFill();
+      stroke(0);
       rect(0, 0, w, h);
       fill(0);
-      rect(0, 0, map(data.value, data.min, data.max, 0, w), h);
       text(data.name, 2, margin + h*0.85);
       text(data.value, w/2 + 10, margin + h*0.85);
       popMatrix();

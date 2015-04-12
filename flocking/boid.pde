@@ -5,7 +5,7 @@ class Boid {
   Data angRange, angView, dRange, sepRange, cohRange, aliRange; // defined by flock
   Data shape; // defined by flock
   float r, mass; // r (boid radius) defined by flock
-  PVector col, debugCol; // color
+  color col, debugCol; // debug color
   float wanderTheta;
 
   Boid(PVector _loc, Flock _flock) {
@@ -18,9 +18,8 @@ class Boid {
     mass = 1;
     r = myFlock.r;
     shape = myFlock.shape; // defines boid arc
-    float c = random(0, 210); 
-    col = new PVector(c, c, c);
-    debugCol = col.get();
+    col = myFlock.col;
+    debugCol = col;
     wanderTheta = 0;
     angRange = myFlock.angRange;
     angView = myFlock.angView;
@@ -91,20 +90,20 @@ class Boid {
         float scalar = d/cos(angDiff); // hypotenuse len = cos(theta)/adjacent
         desired.setMag(scalar);
         // debug
-        PVector test;
-        if (this == others.get(0)) {
-          stroke(0);
-          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
-          test = PVector.add(loc, desired);
-          line(loc.x, loc.y, test.x, test.y); // hypotenuse
-        }
+//        PVector test;
+//        if (this == others.get(0)) {
+//          stroke(0);
+//          line(loc.x, loc.y, other.loc.x, other.loc.y); // toOther aka adjacent
+//          test = PVector.add(loc, desired);
+//          line(loc.x, loc.y, test.x, test.y); // hypotenuse
+//        }
         desired.sub(toOther);
         // debug
-        if (this == others.get(0)) {
-          test = PVector.add(other.loc, desired);
-          stroke(255, 0, 0);
-          line(other.loc.x, other.loc.y, test.x, test.y);
-        }
+//        if (this == others.get(0)) {
+//          test = PVector.add(other.loc, desired);
+//          stroke(255, 0, 0);
+//          line(other.loc.x, other.loc.y, test.x, test.y);
+//        }
         desiredAve.add(desired);
         count++;
       }
@@ -112,24 +111,24 @@ class Boid {
     if (count > 0) {
         desiredAve.div(count);
         // debug
-        PVector test;
-        if (this == others.get(0)) {
-          test = desiredAve.get();
-          test.setMag(20);
-          test.add(loc);
-          stroke(0);
-          line(loc.x, loc.y, test.x, test.y);
-        }
+//        PVector test;
+//        if (this == others.get(0)) {
+//          test = desiredAve.get();
+//          test.setMag(20);
+//          test.add(loc);
+//          stroke(0);
+//          line(loc.x, loc.y, test.x, test.y);
+//        }
         desiredAve.setMag(maxSpeed.value);
         steer = PVector.sub(desiredAve, vel);
         // debug
-        if (this == others.get(0)) {
-          test = steer.get();
-          test.setMag(40);
-          test.add(loc);
-          stroke(255, 0, 0);
-          line(loc.x, loc.y, test.x, test.y);
-        }
+//        if (this == others.get(0)) {
+//          test = steer.get();
+//          test.setMag(40);
+//          test.add(loc);
+//          stroke(255, 0, 0);
+//          line(loc.x, loc.y, test.x, test.y);
+//        }
         steer.limit(maxForce.value);
       }
     return steer;
@@ -302,7 +301,7 @@ class Boid {
   void display() {
     pushStyle(); 
     noStroke();
-    fill(col.x, col.y, col.z);
+    fill(col);
     pushMatrix();
     translate(loc.x, loc.y);
     rotate(vel.heading());
@@ -317,11 +316,11 @@ class Boid {
       float angDiff = PVector.angleBetween(vel, v);
       float d = v.mag();
       if (d > 0 && d < dRange.value && angDiff < angView.value) { 
-        other.col.set(255, 0, 0);
+        other.col = color(255, 0, 0);
       } else if (d > 0 && d < dRange.value && angDiff < angRange.value) { 
-        other.col.set(0, 0, 255);
+        other.col = color(0, 0, 255);
       } else if (d > 0) { 
-        other.col.set(debugCol);
+        other.col = debugCol;
       }
     }
     pushMatrix();
@@ -329,16 +328,17 @@ class Boid {
     rotate(vel.heading());
     // cohesion range purple
     fill(255, 0, 255, 45);
-    noStroke();
+    stroke(255, 0, 255);
     arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
     fill(255);
-    noStroke();
+    stroke(255, 0, 255);
     arc(0, 0, cohRange.value*dRange.value*2, cohRange.value*dRange.value*2, -angRange.value, angRange.value, PIE);;
     // total range gray
     noStroke();
     fill(0, 0, 0, 45);
     arc(0, 0, dRange.value*2, dRange.value*2, -angRange.value, angRange.value, PIE);
-    // view range gray
+    // view range cyan
+    fill(0, 255, 255, 45);
     arc(0, 0, dRange.value*2, dRange.value*2, -angView.value, angView.value, PIE);
     // separation range green
     stroke(0, 255, 0);
