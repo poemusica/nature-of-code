@@ -10,17 +10,18 @@ class CA{
     cells = new int[width/w];
     initCells();
     rules = new int[8];
-    n = int(random(0, 256));
-    getRules(n);
-    println(n, Arrays.toString(rules));
+    getRules();
   }
   
-  void getRules(int n) {
+  void getRules() {
+    int n = int(random(0, 256));
     String s = binary(n, rules.length); // convert number to 8-bit string
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
       rules[rules.length - 1 - i] = Character.getNumericValue(c); // digits ordered in reverse
     }
+    // debug
+    println(n, s, Arrays.toString(rules));
   }
   
   void initCells() {
@@ -52,8 +53,19 @@ class CA{
     gen++;
   }
   
+  void reset() {
+    gen = 0;
+    getRules();
+    initCells();
+  }
+  
   void display() {
     noStroke();
+    if (gen*w > height) {
+      reset();
+      fill(255);
+      rect(0, 0, width, height);
+    }
     for (int i = 0; i < cells.length; i++) {
       if (cells[i] == 1) {
         fill(0);
