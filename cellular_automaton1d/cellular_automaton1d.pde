@@ -1,6 +1,7 @@
 class CA{
   
   int[]cells;
+  int[] cellSeed;
   int[] rules; // could pick a number from 0-255 and convert the binary to a list
   int w, n, gen;
   
@@ -9,6 +10,8 @@ class CA{
     w = 10;
     cells = new int[width/w];
     initCells();
+    cellSeed = new int[width/w];
+    arrayCopy(cells, cellSeed);
     rules = new int[8];
     getRules();
   }
@@ -26,9 +29,11 @@ class CA{
   
   void initCells() {
     for (int i = 0; i < cells.length; i++) {
-      cells[i] = 0;
+      cells[i] = round(random(0, 1));
+//      cells[i] = 0;
     }
-    cells[cells.length/2] = 1;
+    
+//    cells[cells.length/2] = 1;
   }
   
   void run() {
@@ -56,7 +61,7 @@ class CA{
   void reset() {
     gen = 0;
     getRules();
-    initCells();
+    arrayCopy(cellSeed, cells);
   }
   
   void display() {
