@@ -43,8 +43,8 @@ class CA{
     if (frameCount % 2 == 0) {
       step();
     }
-    noScroll();
-//    scroll();
+//    noScroll();
+    scroll();
   }
   
   int applyRule(int a, int b, int c) { // 7 ==> rules[0], 6 ==> rules[1], 5 ==> rules[2], etc.
@@ -58,6 +58,9 @@ class CA{
     for (int i = 1; i < cells.length - 1; i++) { // excludes first and last
       nextGen[i] = applyRule(cells[i-1], cells[i], cells[i+1]);
     }
+    int last = cells.length-1;
+    nextGen[0] = applyRule(cells[last], cells[0], cells[1]);
+    nextGen[last] = applyRule(cells[last-1], cells[last], cells[0]);
     cells = nextGen;
     gen++;
     if ( gen <= rows - 1) {
