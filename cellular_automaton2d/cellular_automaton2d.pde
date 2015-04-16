@@ -1,14 +1,33 @@
 class CA {
   int w, rows, cols; // define grid
   int[][] cells; // current generation
+  boolean running;
   
   CA() {
+    running = false;
     w = 10;
-    rows = floor(width/w);
-    cols = floor(height/w);
+    rows = floor(height/w);
+    cols = floor(width/w);
     cells = new int[rows][cols];
-    init(); // initialize cells
+    clearCells();
+//    init(); // initialize cells
   }
+  
+  void manualSetup() {
+    if(mousePressed) {
+      int row = constrain(floor(mouseY/w), 0, rows - 1);
+      int col = constrain(floor(mouseX/w), 0, cols - 1);
+      cells[row][col] = 1;
+    }
+  }
+  
+  void clearCells() { // swap for init if using manualSetup
+    for(int i = 0; i < rows; i++) {
+      for(int j = 0; j < cols; j++) {
+        cells[i][j] = 0; // all white
+      }
+    }
+  } 
   
   void init() {
     for(int i = 0; i < rows; i++) {
@@ -19,7 +38,12 @@ class CA {
   }
   
   void run() {
-    step();
+    if (running == false) {
+      manualSetup();
+    }
+    if (running == true) {
+      step();
+    }
     display();
   }
   
@@ -49,15 +73,16 @@ class CA {
   }
   
   void display() {
+    rectMode(CORNER);
     stroke(0);
-    for(int i = 0; i < rows; i++) {
-      for(int j = 0; j < cols; j++) {
+    for(int i = 0; i < rows; i++) { // y value
+      for(int j = 0; j < cols; j++) { // x value
        if (cells[i][j] == 1) {
          fill(0);
        } else {
          noFill();
        }
-       rect(i*w, j*w, w, w);
+       rect(j*w, i*w, w, w);
       }
     }
   } 
