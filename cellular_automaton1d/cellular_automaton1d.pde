@@ -2,18 +2,24 @@ class CA{
   
   int[]cells;
   int[] cellSeed;
-  int[] rules; // could pick a number from 0-255 and convert the binary to a list
-  int w, n, gen;
+  int[][] history;
+  int[] rules;
+  int w, gen, rows, cols, pointer;
   
   CA() {
     gen = 0;
     w = 10;
-    cells = new int[width/w];
+    rows = height/w;
+    cols = width/w;
+    cells = new int[cols];
     initCells();
-    cellSeed = new int[width/w];
+    cellSeed = new int[cols];
     arrayCopy(cells, cellSeed);
     rules = new int[8];
     getRules();
+    history = new int[rows][cols];
+    pointer = gen;
+    history[gen] = cellSeed; 
   }
   
   void getRules() {
@@ -30,17 +36,15 @@ class CA{
   void initCells() {
     for (int i = 0; i < cells.length; i++) {
       cells[i] = round(random(0, 1));
-//      cells[i] = 0;
     }
-    
-//    cells[cells.length/2] = 1;
   }
   
   void run() {
-    if (frameCount % 10 == 0) {
+    if (frameCount % 2 == 0) {
       step();
     }
-    display();
+    noScroll();
+//    scroll();
   }
   
   int applyRule(int a, int b, int c) { // 7 ==> rules[0], 6 ==> rules[1], 5 ==> rules[2], etc.
@@ -56,6 +60,13 @@ class CA{
     }
     cells = nextGen;
     gen++;
+    if ( gen <= rows - 1) {
+      history[gen] = nextGen;
+    } else {
+      pointer = gen % rows;
+      history[pointer] = nextGen;
+      pointer = (pointer + 1) % rows;
+    }
   }
   
   void reset() {
@@ -64,12 +75,34 @@ class CA{
     arrayCopy(cellSeed, cells);
   }
   
-  void display() {
+  void scroll() {
+    background(255);
+    for (int i = pointer; i < history.length; i++) {
+      int[] row = history[i];
+      display(row, i - pointer);
+    }
+    int comp = history.length - pointer;
+    for (int i = 0; i < pointer; i++) {
+      int[] row = history[i];
+      display(row, comp + i);
+    }
+  }
+  
+  void display(int[] row, int j) {
     noStroke();
-    if (gen*w > height) {
+    for (int i = 0; i < row.length; i++) {
+      if (row[i] == 1) {
+        fill(0);
+        rect(i*w, j*w, w, w);
+      }
+    }
+  }
+  
+  void noScroll() {
+    noStroke();
+    if (gen >= rows - 1) {
       reset();
-      fill(255);
-      rect(0, 0, width, height);
+      background(255);
     }
     for (int i = 0; i < cells.length; i++) {
       if (cells[i] == 1) {
