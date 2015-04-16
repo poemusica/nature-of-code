@@ -13,7 +13,7 @@ class CA {
     cols = floor(width/w);
     read = new int[rows][cols];
     write = new int[rows][cols];
-    temp = new int[rows][cols];
+    temp = write;
     init(); // initialize cells
 //    manualSetup();
   }
