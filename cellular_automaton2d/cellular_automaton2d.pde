@@ -1,6 +1,9 @@
 class CA {
   int w, rows, cols; // define grid
-  int[][] cells; // current generation
+  // swap read and write every frame
+  int[][] read; // display and calculate using read
+  int[][] write; // step using write
+  int[][] temp;
   boolean running;
   
   CA() {
@@ -8,23 +11,28 @@ class CA {
     w = 10;
     rows = floor(height/w);
     cols = floor(width/w);
-    cells = new int[rows][cols];
-    clearCells();
+    read = new int[rows][cols];
+    write = new int[rows][cols];
+    temp = new int[rows][cols];
     init(); // initialize cells
+//    manualSetup();
   }
   
   void manualSetup() {
     if(mousePressed) {
       int row = constrain(floor(mouseY/w), 0, rows - 1);
       int col = constrain(floor(mouseX/w), 0, cols - 1);
-      cells[row][col] = 1;
+      write[row][col] = 1;
+      read[row][col] = 1; // hacky solution but it works
     }
   }
   
   void clearCells() { // swap for init if using manualSetup
     for(int i = 0; i < rows; i++) {
       for(int j = 0; j < cols; j++) {
-        cells[i][j] = 0; // all white
+        write[i][j] = 0; // all white
+        read[i][j] = 0;
+        temp[i][j] = 0;
       }
     }
   } 
@@ -33,7 +41,7 @@ class CA {
     running = true;
     for(int i = 0; i < rows; i++) {
       for(int j = 0; j < cols; j++) {
-        cells[i][j] = int(random(2)); // 0 or 1
+        write[i][j] = int(random(2)); // 0 or 1
       }
     }
   }
@@ -43,23 +51,24 @@ class CA {
       manualSetup();
     }
     if (running == true) {
+      temp = write;
+      write = read; // overwrite the previous read data
+      read = temp; // read what you just wrote
       step();
     }
     display();
   }
   
   void step() {
-    int[][] nextGen = new int[rows][cols];
     for(int i = 0; i < rows; i++) {
       for(int j = 0; j < cols; j++) {
-        nextGen[i][j] = applyRule(i, j); // apply rule to compute state
+        write[i][j] = applyRule(i, j); // apply rule to compute state
       }
     }
-    cells = nextGen;
   }
   
   int applyRule(int row, int col) {
-    int cell = cells[row][col];
+    int cell = read[row][col];
     int count = 0; // number of live neighbors
     for(int i = -1; i <= 1; i++) {
       int r = row + i;
@@ -69,7 +78,7 @@ class CA {
         int c = col + j;
         if (c < 0) { c = cols - 1; } // wrap across columns
         if (c > cols - 1) { c = 0; }
-        count += cells[r][c];
+        count += read[r][c];
       }
     }
     count -= cell; // don't include self
@@ -79,12 +88,12 @@ class CA {
     return cell; // otherwise, don't change
   }
   
-  void display() {
+  void display() { // always display read
     rectMode(CORNER);
     stroke(0);
     for(int i = 0; i < rows; i++) { // y value
       for(int j = 0; j < cols; j++) { // x value
-       if (cells[i][j] == 1) {
+       if (read[i][j] == 1) {
          fill(0);
        } else {
          noFill();
