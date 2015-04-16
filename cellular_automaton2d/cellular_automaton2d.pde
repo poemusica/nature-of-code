@@ -10,7 +10,7 @@ class CA {
     cols = floor(width/w);
     cells = new int[rows][cols];
     clearCells();
-//    init(); // initialize cells
+    init(); // initialize cells
   }
   
   void manualSetup() {
@@ -30,6 +30,7 @@ class CA {
   } 
   
   void init() {
+    running = true;
     for(int i = 0; i < rows; i++) {
       for(int j = 0; j < cols; j++) {
         cells[i][j] = int(random(2)); // 0 or 1
@@ -49,8 +50,8 @@ class CA {
   
   void step() {
     int[][] nextGen = new int[rows][cols];
-    for(int i = 1; i < rows - 1; i++) { // exclude top and bottom row
-      for(int j = 1; j < cols - 1; j++) { // exclude first and last column
+    for(int i = 0; i < rows; i++) {
+      for(int j = 0; j < cols; j++) {
         nextGen[i][j] = applyRule(i, j); // apply rule to compute state
       }
     }
@@ -60,9 +61,15 @@ class CA {
   int applyRule(int row, int col) {
     int cell = cells[row][col];
     int count = 0; // number of live neighbors
-    for(int i = -1; i <= 1; i++) { 
+    for(int i = -1; i <= 1; i++) {
+      int r = row + i;
+      if (r < 0) { r = rows - 1; } // wrap across rows
+      if (r > rows - 1) { r = 0; }
       for(int j = -1; j <= 1; j++) {
-        count += cells[row+i][col+j];
+        int c = col + j;
+        if (c < 0) { c = cols - 1; } // wrap across columns
+        if (c > cols - 1) { c = 0; }
+        count += cells[r][c];
       }
     }
     count -= cell; // don't include self
