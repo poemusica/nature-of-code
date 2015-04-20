@@ -2,7 +2,7 @@ CA ca;
 
 void setup() {
   size(900, 600);
-  ca = new CA();
+  ca = new CA(); 
 }
 
 void draw() {
