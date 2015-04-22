@@ -2,7 +2,7 @@ Lattice hexLattice;
 
 void setup() {
   size(1200, 1100, P2D);
-  hexLattice = new Lattice(0, 2);
+  hexLattice = new Lattice(0, 4);
 }
 
 void draw() {

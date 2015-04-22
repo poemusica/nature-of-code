@@ -32,9 +32,9 @@ class Lattice {
     translate(x, y);
     hexagon.setFill(color(100, 35, 125));
     displayLayer4(0, 0);
-    PVector v = new PVector();
-    v.x = edge * -84;
-    v.y = perp * edge * 14;
+    PVector v = new PVector(); // v = (-84, 14) also works 
+    v.x = edge * 73.5;
+    v.y = perp * edge * 49;
     float rot = v.heading();
     float scale = v.mag() / edge;
     hexagon.setFill(color(255, 35, 125));
