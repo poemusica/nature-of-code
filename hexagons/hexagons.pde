@@ -38,7 +38,7 @@ class Lattice {
     float rot = v.heading();
     float scale = v.mag() / edge;
     hexagon.setFill(color(255, 35, 125));
-    for (int i = 0; i < 6; i++) { // six outer layer2s
+    for (int i = 0; i < 6; i++) { // six outer layer4s
       hexagon.getVertex(i, v);
       v.rotate(rot);
       v.mult(scale);
@@ -56,8 +56,7 @@ class Lattice {
     v.y = perp * edge * -7;
     float rot = v.heading();
     float scale = v.mag() / edge;
-    for (int i = 0; i < 6; i++) { // six outer layer2s
-      hexagon.getVertex(i, v);
+    for (int i = 0; i < 6; i++) { // six outer layer3
       v.rotate(rot);
       v.mult(scale);
       displayLayer3(v.x, v.y);
