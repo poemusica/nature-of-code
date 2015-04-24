@@ -3,7 +3,7 @@ class Lattice {
   float edge; // width from center to vertex. and width of edges.
   float ang; // interior angle
   float perp; // normalized width from center to edge midpoint. 
-  int layers; // number of layers in lattice
+  int layers; // number of layers in lattice (not currently used)
   ArrayList<PVector> latticeVerts; 
   
   Lattice(int _layers, float hexSize) {
@@ -31,8 +31,8 @@ class Lattice {
     pushMatrix();
     translate(x, y);
     hexagon.setFill(color(100, 35, 125));
-    displayLayer4(0, 0);
-    PVector v = new PVector(); // v = (-84, 14) also works 
+    displayLayer4(0, 0); // center layer4
+    PVector v = new PVector(); // (-84, 14) also works 
     v.x = edge * 73.5;
     v.y = perp * edge * 49;
     float rot = v.heading();
@@ -50,13 +50,14 @@ class Lattice {
   void displayLayer4(float x, float y) {
     pushMatrix();
     translate(x, y);
-    displayLayer3(0, 0);
+    displayLayer3(0, 0); // center layer3
     PVector v = new PVector();
     v.x = edge * -31.5;
     v.y = perp * edge * -7;
     float rot = v.heading();
     float scale = v.mag() / edge;
-    for (int i = 0; i < 6; i++) { // six outer layer3
+    for (int i = 0; i < 6; i++) { // six outer layer3s
+      hexagon.getVertex(i, v);
       v.rotate(rot);
       v.mult(scale);
       displayLayer3(v.x, v.y);
@@ -67,7 +68,7 @@ class Lattice {
   void displayLayer3(float x, float y) {
     pushMatrix();
     translate(x, y);
-    displayLayer2(0, 0);
+    displayLayer2(0, 0); // center layer2
     PVector v = new PVector();
     v.x = edge * -12;
     v.y = perp * edge * 2;
