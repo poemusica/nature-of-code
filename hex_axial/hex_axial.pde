@@ -1,6 +1,5 @@
 class HexGrid {
   // define hexagon and spacing
-  PShape hexagon;
   float size; // edge and center-to-corner distance
   float horiz; // horizontal distance from one hex to another
   float vert; // vertical distance from one hex to another
@@ -9,7 +8,7 @@ class HexGrid {
   // define neighbors
   PVector[] directions;
   // data
-  int[][] read, write, temp; // display and calculate using read. update using write.
+  Cell[][] cells;
   
   HexGrid(float _size) {
     size = _size;
@@ -19,9 +18,7 @@ class HexGrid {
     rows = 38;
     cols = 38;
     setDirections();
-    read = new int[rows][cols];
-    write = new int[rows][cols];
-    temp = write;
+    cells = new Cell[rows][cols];
     init();
   }
   
@@ -53,43 +50,55 @@ class HexGrid {
   }
   
   void init() {
-    for (int r = 1; r < rows -1; r++) {
-      for (int q = 1; q < cols - 1; q++) {
-        write[r][q] = int(random(2)); // 1 or 0
+    int state = 0;
+    PVector v = new PVector();
+    for (int r = 0; r < rows; r++) {
+      for (int q = 0; q < cols; q++) {
+        state = int(random(2));
+        v = hexToCart(q, r);
+        cells[r][q] = new Cell(v.x, v.y, state); // 1 or 0
       }
     }
   }
   
   void run() {
-    temp = write;
-    write = read;
-    read = temp;
+    store();
     update();
     display();
   }
   
+  void store() {
+    for (int r = 0; r < rows; r++) {
+      for (int q = 0; q < cols; q++) {
+        cells[r][q].store();
+      }
+    }
+  }
+  
   void update() {
+    Cell cell;
     for (int r = 1; r < rows - 1; r++) {
       for (int q = 1; q < cols - 1; q++) {
-        write[r][q] = applyRule(q, r);
+        cell = cells[r][q]; 
+        cell.update(applyRule(q, r));
       }
     }
   }
   
   int applyRule(int col, int row) {
-    int value = read[row][col];
+    Cell cell = cells[row][col];
     int count = 0; // number of live neighbors
-    PVector cell = new PVector(col, row);
+    PVector loc = new PVector(col, row);
     PVector neighbor = new PVector();
     for (int i = 0; i < 6; i++) {
       neighbor = directions[i].get();
-      neighbor.add(cell);
-      count += read[(int)neighbor.y][(int)neighbor.x];
+      neighbor.add(loc);
+      count += cells[(int)neighbor.y][(int)neighbor.x].prev;
     }
-    if (value == 1 && count < 2) { return 0; } // alive with <2 neighbors ==> dead
-    if (value == 1 && count > 3) { return 0; } // alive with >3 neighbors ==> dead
-    if (value == 0 && count == 3) { return 1; } // dead with 3 live neighbors ==> alive 
-    return value; // otherwise, don't change
+    if (cell.prev == 1 && count < 2) { return 0; } // alive with <2 neighbors ==> dead
+    if (cell.prev == 1 && count > 3) { return 0; } // alive with >3 neighbors ==> dead
+    if (cell.prev == 0 && count == 3) { return 1; } // dead with 3 live neighbors ==> alive 
+    return cell.prev; // otherwise, don't change
   }
   
   PVector hexToCart(int col, int row) {
@@ -100,13 +109,9 @@ class HexGrid {
   }
   
   void display() {
-    for (int r = 0; r < rows; r++) {
-      for(int q = 0; q < cols; q++) {
-        if (read[r][q] == 1) {
-          hexagon.setFill(color(0));
-        } else { hexagon.setFill(color(255)); }
-        PVector p = hexToCart(q, r);
-        shape(hexagon, p.x, p.y);
+    for (Cell[] row : cells) {
+      for (Cell cell : row) {
+        cell.display();
       }
     }
   }
