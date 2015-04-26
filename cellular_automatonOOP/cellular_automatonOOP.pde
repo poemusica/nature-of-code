@@ -61,9 +61,10 @@ class CA {
       }
     }
     count -= cell.prev; // don't include self
-    if (cell.prev == 1 && count < 2) { return 0; } // alive with <2 neighbors ==> dead
-    if (cell.prev == 1 && count > 3) { return 0; } // alive with >3 neighbors ==> dead
-    if (cell.prev == 0 && count == 3) { return 1; } // dead with 3 live neighbors ==> alive 
+    float chance = random(1);
+    if (cell.prev == 1 && count < 2 && chance < 0.6) { return 0; } // alive with <2 neighbors ==> dead
+    if (cell.prev == 1 && count > 3 && chance < 0.8) { return 0; } // alive with >3 neighbors ==> dead
+    if (cell.prev == 0 && count == 3 && chance < 0.7) { return 1; } // dead with 3 live neighbors ==> alive 
     return cell.prev; // otherwise, don't change
   }
   
