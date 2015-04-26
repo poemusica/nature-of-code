@@ -15,8 +15,8 @@ class HexGrid {
     registerHex();
     horiz = 1.5 * size;
     vert = sqrt(3) * size;
-    rows = 38;
-    cols = 38;
+    rows = 50;
+    cols = 50;
     setDirections();
     cells = new Cell[rows][cols];
     init();
@@ -62,8 +62,10 @@ class HexGrid {
   }
   
   void run() {
-    store();
-    update();
+    if (frameCount % 2 == 0) {
+      store();
+      update();
+    }
     display();
   }
   
@@ -77,8 +79,8 @@ class HexGrid {
   
   void update() {
     Cell cell;
-    for (int r = 1; r < rows - 1; r++) {
-      for (int q = 1; q < cols - 1; q++) {
+    for (int r = 0; r < rows; r++) {
+      for (int q = 0; q < cols; q++) {
         cell = cells[r][q]; 
         cell.update(applyRule(q, r));
       }
@@ -93,6 +95,10 @@ class HexGrid {
     for (int i = 0; i < 6; i++) {
       neighbor = directions[i].get();
       neighbor.add(loc);
+      if (neighbor.x < 0) { neighbor.x = cols - 1; } // col check
+      if (neighbor.x > cols - 1) { neighbor.x = 0; }
+      if (neighbor.y < 0) { neighbor.y = rows - 1; } // row check
+      if (neighbor.y > rows - 1) { neighbor.y = 0; }
       count += cells[(int)neighbor.y][(int)neighbor.x].prev;
     }
     if (cell.prev == 1 && count < 2) { return 0; } // alive with <2 neighbors ==> dead
