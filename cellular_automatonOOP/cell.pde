@@ -1,10 +1,10 @@
 class Cell {
   int x, y; // location
   int w; // size
-  int state; // current state
-  int prev; // previous state
+  float state; // current state
+  float prev; // previous state
  
-  Cell(int _x, int _y, int _w, int _state) {
+  Cell(int _x, int _y, int _w,  float _state) {
     x = _x;
     y = _y;
     w = _w;
@@ -16,18 +16,18 @@ class Cell {
     prev = state;
   }
   
-  void update(int _state) {
+  void update(float _state) {
     state = _state;
   }
   
   void display() {
-    if (prev == 0 && state == 1) { // birth
+    if (prev < 0.5 && state >= 0.5) { // birth
       fill(0, 0, 255);
     }
-    else if (state == 1) { // alive
+    else if (state >= 0.5) { // alive
       fill(0);
     }
-    else if (prev == 1 && state == 0) { // death
+    else if (prev >= 0.5 && state < 0.5) { // death
       fill(255, 0, 0);
     }
     else { fill(255); } // dead
