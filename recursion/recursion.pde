@@ -1,5 +1,5 @@
 void setup() {
-  size(640, 360);
+  size(1000, 600);
   strokeWeight(2);
   smooth();
 }
@@ -11,26 +11,24 @@ void draw() {
 
 void drawCircle(float x, float y, float radius) {
   float noiseVal = 0;
-  pushMatrix();
-  translate(x, y);
   beginShape();
+  strokeWeight(2);
   stroke(175, 75);
-  fill(0, 255, 0, 10);
+  fill(255, 0, 255, 25);
   for( float theta = 0; theta <= 360; theta++) {
     noiseVal += 0.1;
-    float r = map(noise(noiseVal), 0, 1, -radius/3, radius/3);
+    float r = map(noise(x/10, y/10, frameCount), 0, 1, -radius/2, radius/2);
     r += radius;
-    float xPoint = radius * cos(radians(theta));
-    float yPoint = radius * sin(radians(theta));
-    curveVertex(xPoint, yPoint);
+    float xPoint = r * cos(radians(theta));
+    float yPoint = r * sin(radians(theta));
+    curveVertex(x + xPoint, y + yPoint);
   }
   endShape(CLOSE);
-  popMatrix();
   
-  if (radius > 50) {
-    drawCircle(x + radius/2, y, radius/2);
-    drawCircle(x - radius/2, y, radius/2);
-    drawCircle(x, y + radius/2, radius/2);
-    drawCircle(x, y - radius/2, radius/2);
+  if (radius > 25) {
+    drawCircle(x + radius, y, radius/2);
+    drawCircle(x - radius, y, radius/2);
+    drawCircle(x, y + radius, radius/2);
+    drawCircle(x, y - radius, radius/2);
   }
 }
