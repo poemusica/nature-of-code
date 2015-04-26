@@ -17,7 +17,7 @@ void drawCircle(float x, float y, float radius) {
   fill(255, 0, 255, 25);
   for( float theta = 0; theta <= 360; theta++) {
     noiseVal += 0.1;
-    float r = map(noise(x/10, y/10, frameCount), 0, 1, -radius/2, radius/2);
+    float r = map(noise(noiseVal, frameCount), 0, 1, -radius/2, radius/2);
     r += radius;
     float xPoint = r * cos(radians(theta));
     float yPoint = r * sin(radians(theta));
