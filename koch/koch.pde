@@ -7,7 +7,8 @@ class KochLine {
   }
   
   PVector kochA() {
-    return start.get();
+    PVector v = start.get();
+    return v;
   }
   
   PVector kochB() {
@@ -34,7 +35,8 @@ class KochLine {
   }
   
   PVector kochE() {
-    return end.get();
+    PVector v = end.get();
+    return v;
   }
   
   void display() {
@@ -46,9 +48,12 @@ class KochLine {
 class KochList {
   ArrayList<KochLine> lines;
   
-  KochList(PVector start, PVector end) {
+  KochList(PVector start, PVector end, int n) {
     lines = new ArrayList<KochLine>();
     lines.add(new KochLine(start, end));
+    for (int i = 0; i < n; i++) {
+      generate();
+    }
   }
   
   void generate() {
@@ -65,6 +70,12 @@ class KochList {
       next.add(new KochLine(d, e));
     }
     lines = next;
+  }
+  
+  void display() {
+    for (KochLine l : lines) {
+      l.display();
+    }
   }
   
 }
