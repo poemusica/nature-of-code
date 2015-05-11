@@ -1,12 +1,15 @@
 PShape hexagon;
 PShape triangle;
 KochList[] koches;
+int kli, li;
 
 void setup() {
   size(640, 600, P2D);
   registerHex();
   registerTri();
   
+  kli = 0;
+  li = 0;
   koches = new KochList[3];
   PVector s = new PVector();
   PVector e = new PVector();
@@ -19,12 +22,20 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+//  background(255);
   translate(width/2, height/2);
-  for (KochList k : koches) {
-    k.display();
+  KochList k = koches[kli];
+  KochLine l = k.lines.get(li);
+  l.display();
+  if (li < k.lines.size() - 1) {
+    li++;
+  } else if (kli < koches.length - 1) {
+    li = 0;
+    kli++;
   }
-  shape(triangle, 0, 0);
+//  for (KochList k : koches) {
+//    k.display();
+//  }
 }
 
 void registerTri() {
