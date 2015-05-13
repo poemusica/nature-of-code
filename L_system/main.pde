@@ -13,6 +13,7 @@ void draw() {
  background(255);
  translate(width/2, height);
  renderer.render(Lsys.sentence, Lsys.len, Lsys.theta); 
+ Lsys.changeTheta();
 }
 
 void mouseClicked() {
