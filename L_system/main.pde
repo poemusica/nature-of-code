@@ -12,11 +12,13 @@ void setup() {
 void draw() {
  background(255);
  translate(width/2, height);
- renderer.render(Lsys.sentence, Lsys.len, Lsys.theta); 
- Lsys.changeTheta();
+ Lsys.display();
+// renderer.render(Lsys.sentence, Lsys.len, Lsys.theta); 
+// Lsys.changeTheta();
 }
 
 void mouseClicked() {
-  Lsys.scaleLen(0.5);
-  Lsys.sentence = rules.applyRules(Lsys.sentence);
+  Lsys.generate();
+//  Lsys.scaleLen(0.5);
+//  Lsys.sentence = rules.applyRules(Lsys.sentence);
 }
