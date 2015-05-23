@@ -1,18 +1,19 @@
 class Branch {
   char c;
   PVector start, end, loc, dir;
+  int gen;
   float theta, len;
   
-  Branch(char _c, PVector s, PVector e, float t) {
+  Branch(char _c, int _gen, PVector s, PVector e, float t) {
     c = _c;
+    gen = _gen;
     start = s.get();
     end = e.get();
     theta = t;
     loc = s.get();
     dir = PVector.sub(end, start);
-    dir.setMag(1);
+    dir.setMag(0.1);
     len = PVector.dist(start, end);
-    println(len);
   }
   
   float getCurrentLen() {
