@@ -1,7 +1,7 @@
 class DNA {
   char[] genes = new char[18];
   float fitness;
-  float mutationRate = 0.01;
+  float normFitness;
   
   DNA() {
     for (int n = 0; n < genes.length; n++) {
@@ -25,7 +25,7 @@ class DNA {
   }
   
   void normalize(float totalFitness) {
-    fitness = (fitness/totalFitness) * 100;
+    normFitness = (fitness/totalFitness) * 100;
   }
   
   DNA crossover(DNA partner) {
@@ -41,9 +41,9 @@ class DNA {
     return child;
   }
   
-  void mutate() {
+  void mutate(float rate) {
     for (int n = 0; n < genes.length; n++) {
-      if (random(1) < mutationRate) {
+      if (random(1) < rate) {
         genes[n] = (char)random(32, 128);
       }
     }
