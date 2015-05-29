@@ -1,0 +1,52 @@
+class DNA {
+  char[] genes = new char[18];
+  float fitness;
+  float mutationRate = 0.01;
+  
+  DNA() {
+    for (int n = 0; n < genes.length; n++) {
+      genes[n] = (char)random(32, 128);
+    }
+  }
+  
+  String geneString() {
+    return new String(genes);
+  }
+  
+  void evaluate() {
+    int score = 0;
+    for (int n = 0; n < target.length(); n++) {
+      char c = target.charAt(n);
+      if (genes[n] == c) {
+        score++;
+      }
+    }
+    fitness = float(score)/target.length();
+  }
+  
+  void normalize(float totalFitness) {
+    fitness = (fitness/totalFitness) * 100;
+  }
+  
+  DNA crossover(DNA partner) {
+    DNA child = new DNA();
+    int splicePt = (int)random(genes.length);
+    for (int n = 0; n < genes.length; n++) {
+      if (n < splicePt) {
+        child.genes[n] = genes[n];
+      } else {
+        child.genes[n] = partner.genes[n];
+      }
+    }
+    return child;
+  }
+  
+  void mutate() {
+    for (int n = 0; n < genes.length; n++) {
+      if (random(1) < mutationRate) {
+        genes[n] = (char)random(32, 128);
+      }
+    }
+  }
+  
+}
