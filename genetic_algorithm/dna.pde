@@ -21,7 +21,7 @@ class DNA {
         score++;
       }
     }
-    fitness = float(score)/target.length();
+    fitness = pow(2, float(score)) / pow(2, target.length()); ;//float(score)/target.length();
   }
   
   void normalize(float totalFitness) {
