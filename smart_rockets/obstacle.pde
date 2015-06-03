@@ -1,15 +1,14 @@
 class Obstacle {
   PVector loc;
-  float w, h;
+  float r;
   
-  Obstacle(PVector _loc, float _w, float _h) {
+  Obstacle(PVector _loc, float _r) {
     loc = _loc.get();
-    w = _w;
-    h = _h;
+    r = _r;
   }
   
   boolean contains(PVector v) {
-    if (v.x > loc.x && v.x < loc.x + w && v.y > loc.y && v.y < loc.y + h) {
+    if (PVector.dist(loc, v) <= r) {
       return true;
     }
     return false;
@@ -17,6 +16,6 @@ class Obstacle {
   
   void display() {
     noStroke();
-    rect(loc.x, loc.y, w, h);
+    ellipse(loc.x, loc.y, 2*r, 2*r);
   }
 }

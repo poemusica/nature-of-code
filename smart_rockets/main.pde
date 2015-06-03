@@ -5,11 +5,11 @@ Obstacle target;
 void setup() {
   size(640, 480);
   pop = new Population(100);
-  obs = new Obstacle[2];
+  obs = new Obstacle[3];
   for (int n = 0; n < obs.length; n++) {
-    obs[n] = new Obstacle(new PVector(random(20, width - 250), random(50, height - 250)), random(10, 200), random(10, 200));
+    obs[n] = new Obstacle(new PVector(random(20, width - 250), random(150, height - 250)), random(10, 100));
   }
-  target = new Obstacle(new PVector(width/2, 40), 30, 30);
+  target = new Obstacle(new PVector(width/2, 40), 15);
 }
 
 void draw() {

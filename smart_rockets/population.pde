@@ -71,18 +71,12 @@ class Population {
     return totalFitness;
   }
   
-  float averageFitness() { // must call rocket.evaluate() first
-    return totalFitness() / population.length;
-  }
-  
   void evolve() {
     // evaluate fitness
     evaluateFitness();
     
     // normalize fitness
     float total = totalFitness();
-//    prevAve = averageFitness();
-//    prevBest = findWinner().fitness;
     bestDist();
     aveDist();
     bestTime();
@@ -133,13 +127,4 @@ class Population {
     return child;
   }
   
-  Rocket findWinner() {
-    Rocket winner = population[0];
-    for (Rocket rocket : population) {
-      if (rocket.fitness > winner.fitness) {
-        winner = rocket;
-      }
-    }
-    return winner;
-  }
 }
