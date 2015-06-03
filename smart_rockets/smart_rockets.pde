@@ -1,8 +1,9 @@
 class Rocket {
   DNA dna;
   PVector loc, vel, acc;
-  float fitness, normFitness;
-  boolean stopped;
+  float fitness, normFitness, record;
+  boolean stopped, hitTarget;
+  int finishTime;
   
   Rocket(int lifeSpan) {
     dna = new DNA(lifeSpan);
@@ -10,6 +11,8 @@ class Rocket {
     vel = new PVector();
     acc = new PVector();
     stopped = false;
+    record = 1000000;
+    finishTime = 0;
   }
   
   void collisionCheck() {
@@ -18,10 +21,23 @@ class Rocket {
     }
   }
   
+  void targetCheck() {
+    float d = PVector.dist(target.loc, loc);
+    if (d < record) {
+      record = d;
+    }
+    if (target.contains(loc)) {
+      hitTarget = true;
+    } else if (!hitTarget) {
+      finishTime++;
+    }
+  }
+  
   void evaluate(PVector target) {
     float d = PVector.dist(loc, target);
     fitness = 1/sq(d);
     if (stopped) { fitness *= 0.1; }
+    if (hitTarget) { fitness *= 2; }
   }
   
   void normalize(float totalFitness) {
@@ -40,11 +56,12 @@ class Rocket {
   } 
   
   void run(int num) {
-    if (!stopped) {
+    if (!stopped && !hitTarget) {
       applyForce(dna.genes[num]);
       update();
-      collisionCheck();
+      collisionCheck(); 
     }
+    targetCheck();
     display();
   }
   

@@ -16,7 +16,7 @@ class Obstacle {
   }
   
   void display() {
-    fill(0, 180);
+    noStroke();
     rect(loc.x, loc.y, w, h);
   }
 }

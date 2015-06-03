@@ -2,11 +2,9 @@ class Population {
   Rocket[] population;
   float mutationRate;
   int generation, lifeCounter, lifeSpan;
-  PVector target;
-  float prevBest, prevAve;
+  float prevBestDist, prevAveDist, prevBestTime, prevAveTime;
   
   Population(int num) {
-    target = new PVector(width/2, 40);
     mutationRate = 0.01;
     generation = 0;
     lifeCounter = 0;
@@ -19,7 +17,6 @@ class Population {
   }
   
   void live() {
-    displayTarget();
     for (Rocket rocket : population) {
       rocket.run(lifeCounter);
     }
@@ -28,7 +25,41 @@ class Population {
   
   void evaluateFitness() {
     for (Rocket rocket : population) {
-      rocket.evaluate(target);
+      rocket.evaluate(target.loc);
+    }
+  }
+  
+  void aveDist() {
+    float total = 0;
+    for (Rocket rocket : population) {
+      total += rocket.record;
+    }
+    prevAveDist = total / population.length;
+  }
+  
+  void bestDist() {
+    prevBestDist = 100000;
+    for (Rocket rocket : population) {
+      if (rocket.record < prevBestDist) {
+        prevBestDist = rocket.record;
+      }
+    }
+  }
+  
+  void aveTime() {
+    float total = 0;
+    for (Rocket rocket : population) {
+      total += rocket.finishTime;
+    }
+    prevAveTime = total / population.length;
+  }
+  
+  void bestTime() {
+    prevBestTime = 1000000000;
+    for (Rocket rocket : population) {
+      if (rocket.finishTime < prevBestTime) {
+        prevBestTime = rocket.finishTime;
+      }
     }
   }
   
@@ -50,8 +81,12 @@ class Population {
     
     // normalize fitness
     float total = totalFitness();
-    prevAve = averageFitness();
-    prevBest = findWinner().fitness;
+//    prevAve = averageFitness();
+//    prevBest = findWinner().fitness;
+    bestDist();
+    aveDist();
+    bestTime();
+    aveTime();
     for (Rocket rocket: population) {
       rocket.normalize(total);
     }
@@ -106,11 +141,5 @@ class Population {
       }
     }
     return winner;
-  }
-  
-  void displayTarget() {
-    fill(255, 0, 0, 110);
-    noStroke();
-    ellipse(target.x, target.y, 30, 30);
   }
 }
