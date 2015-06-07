@@ -13,13 +13,13 @@ void draw() {
   background(175);
   pop.display();
   
-  pop.userScore(new PVector(mouseX, mouseY));
-//  if (frameCount % 1 == 0 && stop == false) {
-//    pop.evolve();
-//  }
+//  pop.userScore(new PVector(mouseX, mouseY));
+  if (frameCount % 1 == 0 && stop == false) {
+    pop.evolve();
+  }
 }
 
 void mouseClicked() {
-  pop.evolve();
-//  stop = ! stop;
+//  pop.evolve();
+  stop = ! stop;
 }
