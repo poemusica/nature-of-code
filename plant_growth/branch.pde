@@ -12,7 +12,7 @@ class Branch {
     theta = t;
     loc = s.get();
     dir = PVector.sub(end, start);
-    dir.setMag(0.1);
+    dir.setMag(0.01);
     len = PVector.dist(start, end);
   }
   
@@ -34,6 +34,5 @@ class Branch {
   
   void display() {
     line(start.x, start.y, loc.x, loc.y);
-//    line(start.x, start.y, end.x, end.y);
   }
 }
